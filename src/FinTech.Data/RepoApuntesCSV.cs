@@ -26,7 +26,7 @@ namespace FinTech.Data
             return File.ReadAllLines(_file)
                 .Skip(1)
                 .Where(row => row.Length > 0)
-                .Select(i => Apunte.ParseRow(i)).ToList();
+                .Select(i => Apunte.ParseCSVRow(i)).ToList();
         }
         void IRepoApuntes.Guardar(List<Apunte> datos)
         {

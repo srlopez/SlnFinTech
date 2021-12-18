@@ -10,6 +10,7 @@ namespace FinTech.UI.Consola
         // Modo de la Interfaz
         // En Modo 'Admin' se presentan las opciones de 'Usuario'
         // y las propias de 'Admin'
+        Anonimo,
         Usuario,
         Admin
     }
@@ -21,23 +22,26 @@ namespace FinTech.UI.Consola
 
         // Miembros
         private Modo _modo; //Modo de la Interfaz
-        private string[] _menuModo = { "Login", "Logout" };
+        private string[] _menuModo = { "Login", "Logout User", "Exit Admin mode" };
         private Dictionary<(string cdu, Modo modo), Action> _casosDeUso;
+
+        private string _usuario;
 
         public Controlador(Sistema sistema, Vista vista)
         {
             _sistema = sistema;
             _vista = vista;
-            _modo = Modo.Usuario;
+            _modo = Modo.Anonimo;
+            _usuario = "Anonimo";
             _casosDeUso = new Dictionary<(string, Modo), Action>(){
-                { ("Consultar Categorias",Modo.Usuario), qryCategorias },
-                { ("Consultar SubCategorias",Modo.Usuario), qrySubCategorias },
-                { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
+                { ("Consultar Categorias",Modo.Anonimo), qryCategorias },
+                { ("Consultar SubCategorias",Modo.Anonimo), qrySubCategorias },
+                { ("Consultar Apuntes",Modo.Anonimo), qryApuntes },
                 { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
                 { ("Informe Importes",Modo.Usuario), qryInformesDeImportes },
                 { ("Mantenimiento de Categorias",Modo.Admin), crudCategorias },
                 { ("Mantenimiento de SubCategorias",Modo.Admin), crudSubCategorias },
-                { (_menuModo[(int)_modo],Modo.Usuario), establecerModoInterfaz },
+                { (_menuModo[(int)_modo],Modo.Anonimo), establecerModoInterfaz },
             };
         }
 
@@ -92,7 +96,7 @@ namespace FinTech.UI.Consola
                 var subcat = _vista.TryObtenerElementoDeLista("SubCategorias", _sistema.QryCategorias(parentcat.Id), "Indica la subcategoría");
                 decimal importe = _vista.TryObtenerDatoDeTipo<decimal>("Importe");
                 string detalle = _vista.TryObtenerDatoDeTipo<string>("Detalle");
-                Apunte apunte = new Apunte(parentcat.Id, subcat.Id, importe, "user", detalle);
+                Apunte apunte = new Apunte(parentcat.Id, subcat.Id, importe, _usuario, detalle);
                 // Ejecución de Caso de Uso
                 _sistema.CmdRegistrarApunte(apunte);
                 // Presentación al usuario
@@ -172,37 +176,49 @@ namespace FinTech.UI.Consola
         }
         private void establecerModoInterfaz()
         {
-            if (_modo == Modo.Admin)
+            if (_modo > Modo.Anonimo)
             {
-                // Salimos de Modo.Admin
-                _modo = Modo.Usuario;
+                // Salimos de Modo.Admin y Usuario
+                // Logout
+                _modo = Modo.Anonimo;
             }
             else
                 try
                 {
-                    var password = _vista.TryObtenerDatoDeTipo<string>("Clave de acceso");
+                    var aux = _vista.TryObtenerDatoDeTipo<string>("Username").ToLower().Trim();
+                    var password = _vista.TryObtenerDatoDeTipo<string>("Password");
                     // Sólo validamos que el primer caracter sea 'A' para pasar a modo Admin
-                    if (password[0] == 'A')
+                    if ("Aa".Contains(password[0]))
                     {
                         // Entramos en Modo Admin
                         _modo = Modo.Admin;
+                        _usuario = aux;
                     }
                     else
                     {
-                        _vista.Mostrar("Acceso no permitido");
-                        return;
+                        if ("Uu".Contains(password[0]))
+                        {
+                            // Entramos en Modo usuario
+                            _modo = Modo.Usuario;
+                            _usuario = aux;
+                        }
+                        else
+                        {
+                            _vista.Mostrar("Acceso no permitido");
+                            return;
+                        }
                     }
                 }
                 catch { return; };
 
-            establecerMenu(_menuModo[(int)_modo]);
+            establecerMenu(_modo);
             return;
 
-            void establecerMenu(string menu)
+            void establecerMenu(Modo modo)
             {
                 var modoKey = _casosDeUso.FirstOrDefault(x => x.Value == establecerModoInterfaz).Key;
                 _casosDeUso.Remove(modoKey);
-                _casosDeUso.Add((menu, Modo.Usuario), establecerModoInterfaz);
+                _casosDeUso.Add((_menuModo[(int)modo], modo), establecerModoInterfaz);
             }
         }
 

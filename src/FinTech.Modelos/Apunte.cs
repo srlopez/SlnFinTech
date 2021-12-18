@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 
-
 namespace FinTech.Models
 {
     public class Apunte
@@ -27,25 +26,25 @@ namespace FinTech.Models
         }
 
         public override string ToString() =>
-        $"{FechaApunte:dd-MM-yy H:mm} {Usuario:8} {CategoriaId:00}/{SubCategoriaId:00} {Importe:0.00} {Detalle}";
-        public static Apunte ParseRow(string row)
+            $"{FechaApunte:dd-MM-yy H:mm} {Usuario,-8} {CategoriaId:00}/{SubCategoriaId:00} {Importe:#.##} {Detalle}";
+        public static Apunte ParseCSVRow(string row)
         {
             NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
             var columns = row.Split(',');
-            // FechaApunte, Categoria, SubCategoria, Importe
-            // Usuario, Detalle
+            // FechaApunte, Usuario, Categoria, SubCategoria
+            // Importe, Detalle
             return new Apunte(
                 DateTime.ParseExact(columns[0].Trim(), "dd-MM-yy H:mm",null),
-                Int16.Parse(columns[2].Trim(), nfi), //cat
-                Int16.Parse(columns[3].Trim(), nfi), //subcat
+                Int16.Parse(columns[2].Trim(), nfi),   //cat
+                Int16.Parse(columns[3].Trim(), nfi),   //subcat
                 Decimal.Parse(columns[4].Trim(), nfi), //importe
                 columns[1], //usu
-                columns[5] //det
+                columns[5]  //det
             );
         }
         public string ToCSVRow() => 
-        $"{FechaApunte:dd-MM-yy H:mm},{Usuario},{CategoriaId},{SubCategoriaId},{Importe:0.00},{Detalle}";
+            $"{FechaApunte:dd-MM-yy H:mm},{Usuario},{CategoriaId},{SubCategoriaId},{Importe:0.00},{Detalle}";
 
     }
 }
