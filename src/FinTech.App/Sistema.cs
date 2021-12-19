@@ -9,19 +9,21 @@ namespace FinTech
     {
         IRepoCategoria _catRepo;
         IRepoApuntes _apRepo;
-        List<Categoria> _categorias = new() { };
-        List<Apunte> _apuntes = new() { };
+        List<Categoria> _categorias;// = new() { };
+        List<Apunte> _apuntes;// = new() { };
         public ReglasDeNegocio Validador;
 
         public Sistema(IRepoCategoria catRepo, IRepoApuntes apRepo)
         {
             _catRepo = catRepo;
             _catRepo.Inicializar();
-            _categorias.AddRange(_catRepo.Cargar());
+            //_categorias.AddRange(_catRepo.Cargar());
+            _categorias = _catRepo.Cargar();
 
             _apRepo = apRepo;
             _apRepo.Inicializar();
-            _apuntes.AddRange(_apRepo.Cargar());
+            //_apuntes.AddRange(_apRepo.Cargar());
+            _apuntes=_apRepo.Cargar();
 
             Validador = new ReglasDeNegocio();
         }

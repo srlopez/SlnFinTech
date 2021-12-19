@@ -3,8 +3,9 @@ using FinTech.Data;
 using FinTech;
 /*
 Punto de Entrada 
-e Inyector de dependencias
+y creador de dependencias
 */
+
 var repoCategorias = new RepoCategoriaCSV();
 var repoApuntes = new RepoApuntesCSV();
 var sistema = new Sistema(repoCategorias, repoApuntes);

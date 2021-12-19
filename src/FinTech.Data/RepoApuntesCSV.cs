@@ -18,11 +18,13 @@ namespace FinTech.Data
 
         void IRepoApuntes.Inicializar()
         {
-            _dataPath = "../../Data/";
+            // TODO: Parametizar 
+            _dataPath = "../../data/";
             _file = _dataPath + "apuntes.csv";
         }
         List<Apunte> IRepoApuntes.Cargar()
         {
+            // TODO: Verificar que el archivo existe
             return File.ReadAllLines(_file)
                 .Skip(1)
                 .Where(row => row.Length > 0)

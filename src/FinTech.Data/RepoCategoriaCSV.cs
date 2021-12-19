@@ -2,10 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-
-//#nullable enable
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace FinTech.Data
 {
@@ -17,11 +15,13 @@ namespace FinTech.Data
 
         void IRepoCategoria.Inicializar()
         {
-            _dataPath = "../../Data/";
+            // TODO: Parametizar 
+            _dataPath = "../../data/";
             _file = _dataPath + "categorias.csv";
         }
         List<Categoria> IRepoCategoria.Cargar()
         {
+            // TODO: Verificar que el archivo existe
             return File.ReadAllLines(_file)
                 .Skip(1)
                 .Where(row => row.Length > 0)
