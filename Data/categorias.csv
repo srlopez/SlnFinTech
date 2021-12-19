@@ -1,20 +1,45 @@
-IDPARENT,ID,DESCRIPCION
-0,1,UNO
-0,2,DOS
-0,3,TRES
-0,4,CUATRO
-0,5,CINCO
-0,6,SEIS
-0,7,SIETE
-1,10,DIEZ
-2,20,VEINTE
-2,21,VENTIUNO
-3,30,TREINTA
-3,31,TREINTA Y UNO
-3,32,TRES Y DOS
-4,40,CUARENTA
-4,41,CUARENTA Y UNO
-5,50,CINCUENTA
-6,60,SESENTA
-7,70,SETENTA
-7,71,SETENTA Y UNO
+ID,SUBID,DESCRIPCION
+0,1,Hogar
+0,2,Vehículos
+0,3,Personal y aficiones
+0,4,Social y Restauración
+0,5,Consumo familiar
+0,6,Inversión en Salud
+0,9,Otros
+1,10,Luz/Electricidad
+1,11,Gas/Butano
+1,12,Teléfono/Internet
+1,13,Seguros
+1,14,Reparaciones/Mantenimiento
+1,15,Reformas
+1,16,Decoración
+1,19,Otros
+2,20,Gasolína/Gasoil
+2,21,Parking/Estacionamiento
+2,22,Reparaciones/Mantenimiento
+2,23,Seguros
+2,29,Otros
+3,30,Libros/Revistas
+3,31,Música/Instrumentos
+3,32,Cine/Teatro/Espectáculos
+3,33,Deporte
+3,34,Hobbies
+3,35,eSubscripciones
+3,36,Ropa/Moda
+3,39,Otros
+4,40,Comidas
+4,41,Copas y fiestas
+4,49,Otros
+5,50,Educación
+5,51,Extra escolares
+5,52,Pensiones
+5,59,Otros
+6,60,Medicinas/Complementos
+6,61,Consultas/Revisiones 
+6,62,Tratamientos
+6,69,Otros
+9,90,Compra Hogar
+9,91,Compra Vehículo
+9,92,Préstamos
+9,93,Compras Mercados
+9,99,Otros

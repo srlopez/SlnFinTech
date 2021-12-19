@@ -74,19 +74,19 @@ namespace FinTech.UI.Consola
         // =======  CASOS DE USO ========
         private void qryCategorias()
         {
-            var lista = _sistema.QryCategorias(0);
-            _vista.MostrarListaEnumerada<Categoria>("Consulta de Categorias principales", lista);
+            var catList = _sistema.QryCategorias(0);
+            _vista.MostrarListaEnumerada<Categoria>("Consulta de Categorias principales", catList);
         }
         private void qrySubCategorias()
         {
-            var parent = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
-            var lista = _sistema.QryCategorias(parent.Id);
-            _vista.MostrarListaEnumerada<Categoria>($"SubCategoria {parent.Descripcion}", lista);
+            var catParent = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
+            var lista = _sistema.QryCategorias(catParent.Id);
+            _vista.MostrarListaEnumerada<Categoria>($"SubCategoria {catParent.Descripcion}", lista);
         }
         private void qryApuntes()
         {
-            var lista = _sistema.QryApuntes();
-            _vista.MostrarListaEnumerada<Apunte>("Consulta de Apuntes", lista);
+            var apList = _sistema.QryApuntes();
+            _vista.MostrarListaEnumerada<Apunte>("Consulta de Apuntes", apList);
         }
         private void qryInformesDeImportes() { }
         private void crudApuntes()
@@ -117,8 +117,8 @@ namespace FinTech.UI.Consola
         {
             while (true) try
                 {
-                    var parent = _vista.TryObtenerElementoDeLista("Selección de Categoria", _sistema.QryCategorias(), "Indica la categoría padre");
-                    crudCategorias(parent.Id, $"CRUD Subcategoria {parent.Descripcion}");
+                    var catParent = _vista.TryObtenerElementoDeLista("Selección de Categoria", _sistema.QryCategorias(), "Indica la categoría padre");
+                    crudCategorias(catParent.Id, $"CRUD Subcategoria {catParent.Descripcion}");
                 }
                 catch { return; }
         }
@@ -126,12 +126,12 @@ namespace FinTech.UI.Consola
         {
             while (true) try
                 {
-                    var lista = _sistema.QryCategorias(parentId);
-                    _vista.MostrarListaEnumerada<Categoria>(titulo, lista);
+                    var catList = _sistema.QryCategorias(parentId);
+                    _vista.MostrarListaEnumerada<Categoria>(titulo, catList);
                     char cud = _vista.TryObtenerCaracterDeString("C=Create, U=Update, D=Delete", "CUD", 'C');
                     if (cud == 'C') create(parentId);
-                    if (cud == 'U') update(selectCategoria(lista));
-                    if (cud == 'D') delete(selectCategoria(lista));
+                    if (cud == 'U') update(selectCategoria(catList));
+                    if (cud == 'D') delete(selectCategoria(catList));
                 }
                 catch (Exception e)
                 {
@@ -141,9 +141,9 @@ namespace FinTech.UI.Consola
 
             void create(int parentId = 0)
             {   // Obtención de datos
-                int id = _vista.TryObtenerDatoDeTipo<int>($"Identificador de categoría");
-                string descripcion = _vista.TryObtenerDatoDeTipo<string>($"Descripción #{id}");
-                Categoria categoria = new Categoria(parentId, id, descripcion);
+                int subId = _vista.TryObtenerDatoDeTipo<int>($"Identificador de categoría");
+                string descripcion = _vista.TryObtenerDatoDeTipo<string>($"Descripción #{subId}");
+                Categoria categoria = new Categoria(parentId, subId, descripcion);
                 // Verificación Reglas de Negocio
                 _sistema.Validador.ValidarCategoriaDescripcion(categoria);
                 _sistema.Validador.ValidarCategoriaFechaRegistro();
