@@ -6,6 +6,7 @@ Punto de Entrada
 y creador de dependencias
 */
 
+
 var repoCategorias = new RepoCategoriaCSV();
 var repoApuntes = new RepoApuntesCSV();
 var sistema = new Sistema(repoCategorias, repoApuntes);
