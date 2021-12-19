@@ -4,3 +4,6 @@ FECHA, USUARIO, CAT, SUBCAT, IMPORTE, DETALLE
 18-12-21 18:32,user,3,32,123.00,123
 18-12-21 19:40,santi,4,41,200.30,nada
 18-12-21 19:42,santi,6,60,23.00,poco
+19-12-21 10:54,santi,2,21,200.34,detella
+19-12-21 10:58,santi,4,41,0.34,sin enteros
+19-12-21 12:10,pedro,4,41,34.56,para nada

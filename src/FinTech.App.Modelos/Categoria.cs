@@ -20,8 +20,8 @@ namespace FinTech.Models
             IdParent = idParent;
             Descripcion = descripcion.Replace(',', '_'); //<- No permito ,
         }
-
-        public override string ToString() => $"{IdGlobal:0000} {Descripcion}";
+        
+        public override string ToString() => $"{IdParent:00/;;#}{Id:00} {Descripcion}";
         public static Categoria ParseRow(string row)
         {
             NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;

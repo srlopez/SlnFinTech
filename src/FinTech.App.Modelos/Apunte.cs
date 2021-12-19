@@ -26,7 +26,7 @@ namespace FinTech.Models
         }
 
         public override string ToString() =>
-            $"{FechaApunte:dd-MM-yy H:mm} {Usuario,-8} {CategoriaId:00}/{SubCategoriaId:00} {Importe:#.##} {Detalle}";
+            $"{FechaApunte:dd-MM-yy H:mm} {Usuario,-8} {CategoriaId:00}/{SubCategoriaId:00} {Importe.ToString("0.00").PadLeft(8)} {Detalle}";
         public static Apunte ParseCSVRow(string row)
         {
             NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;

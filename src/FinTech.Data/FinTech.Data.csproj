@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\FinTech.Modelos\FinTech.Modelos.csproj" />
+    <ProjectReference Include="..\FinTech.App.Modelos\FinTech.App.Modelos.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

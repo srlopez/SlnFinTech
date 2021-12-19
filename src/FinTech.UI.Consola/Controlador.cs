@@ -17,16 +17,17 @@ namespace FinTech.UI.Consola
 
     public class Controlador
     {
+        // ===== DEPENDENCIAS =====
         private Sistema _sistema;
         private Vista _vista;
 
-        // Miembros
+        // ===== MODO DE USO =====
+        private string _usuario; // Usuario Logeado
         private Modo _modo; //Modo de la Interfaz
-        private string[] _menuModo = { "Login", "Logout User", "Exit Admin mode" };
-        private Dictionary<(string cdu, Modo modo), Action> _casosDeUso;
+        private string[] _menuModo = { "Login", "Logout", "Logout Admin" }; // Opciones del menu en funcion del modo
 
-        private string _usuario;
-
+        // ===== CASOS DE USO ==== 
+        private Dictionary<(string titulo, Modo modo), Action> _casosDeUso;
         public Controlador(Sistema sistema, Vista vista)
         {
             _sistema = sistema;
@@ -39,13 +40,13 @@ namespace FinTech.UI.Consola
                 { ("Consultar Apuntes",Modo.Anonimo), qryApuntes },
                 { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
                 { ("Informe Importes",Modo.Usuario), qryInformesDeImportes },
-                { ("Mantenimiento de Categorias",Modo.Admin), crudCategorias },
+                { ("Mantenimiento de Categorias",Modo.Admin), crudPrincipalesCategorias },
                 { ("Mantenimiento de SubCategorias",Modo.Admin), crudSubCategorias },
                 { (_menuModo[(int)_modo],Modo.Anonimo), establecerModoInterfaz },
             };
         }
 
-        // Ciclo de Menu
+        // ======== CICLO PRINCIPAL =====
         public void Run()
         {
             _vista.LimpiarPantalla();
@@ -54,13 +55,14 @@ namespace FinTech.UI.Consola
                 try
                 {
                     // Menu y Obtener opción 
-                    var menu = _casosDeUso.Keys.Where(k => k.modo <= _modo).Select(k => k.cdu).ToList<String>();
-                    var cdu = _vista.TryObtenerElementoDeLista($"Menu de {_modo}", menu, "Seleciona una opción");
+                    var menu = _casosDeUso.Keys.Where(k => k.modo <= _modo).Select(k => k.titulo).ToList<String>();
+                    var opcion = _vista.TryObtenerElementoDeLista($"Menu de {_modo}", menu, "Seleciona una opción");
                     // Ejecución de la opción escogida
-                    _vista.Mostrar(cdu);
-                    _casosDeUso.FirstOrDefault(k => k.Key.cdu == cdu).Value.Invoke();
+                    _vista.Mostrar(""); // (opcion);
+                    var casoDeUso = _casosDeUso.FirstOrDefault(k => k.Key.titulo == opcion).Value;
+                    casoDeUso.Invoke();
                     // Fin opción
-                    _vista.MostrarYReturn("Pulsa <Return> para continuar");
+                    _vista.MostrarYReturn("Pulsa <Return> para continuar", ConsoleColor.DarkGray);
                     _vista.LimpiarPantalla();
                 }
                 catch
@@ -69,22 +71,22 @@ namespace FinTech.UI.Consola
                 }
         }
 
-        // Casos de Uso
+        // =======  CASOS DE USO ========
         private void qryCategorias()
         {
             var lista = _sistema.QryCategorias(0);
-            _vista.MostrarListaEnumerada<Categoria>("Categorias principales", lista);
+            _vista.MostrarListaEnumerada<Categoria>("Consulta de Categorias principales", lista);
         }
         private void qrySubCategorias()
         {
-            var parent = _vista.TryObtenerElementoDeLista("Categorias principales", _sistema.QryCategorias(), "Indica la categoría padre");
+            var parent = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
             var lista = _sistema.QryCategorias(parent.Id);
             _vista.MostrarListaEnumerada<Categoria>($"SubCategoria {parent.Descripcion}", lista);
         }
         private void qryApuntes()
         {
             var lista = _sistema.QryApuntes();
-            _vista.MostrarListaEnumerada<Apunte>("Apuntes", lista);
+            _vista.MostrarListaEnumerada<Apunte>("Consulta de Apuntes", lista);
         }
         private void qryInformesDeImportes() { }
         private void crudApuntes()
@@ -92,11 +94,11 @@ namespace FinTech.UI.Consola
             try
             {
                 // Obtencion de información de usuario
-                var parentcat = _vista.TryObtenerElementoDeLista("Categorias principales", _sistema.QryCategorias(), "Indica la categoría padre");
-                var subcat = _vista.TryObtenerElementoDeLista("SubCategorias", _sistema.QryCategorias(parentcat.Id), "Indica la subcategoría");
-                decimal importe = _vista.TryObtenerDatoDeTipo<decimal>("Importe");
-                string detalle = _vista.TryObtenerDatoDeTipo<string>("Detalle");
-                Apunte apunte = new Apunte(parentcat.Id, subcat.Id, importe, _usuario, detalle);
+                var catPadre = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
+                var catHijo = _vista.TryObtenerElementoDeLista("Selección de SubCategoria", _sistema.QryCategorias(catPadre.Id), "Indica la subcategoría");
+                decimal importe = _vista.TryObtenerDatoDeTipo<decimal>("Introduzca Importe");
+                string detalle = _vista.TryObtenerDatoDeTipo<string>("Introduzca Detalle");
+                Apunte apunte = new Apunte(catPadre.Id, catHijo.Id, importe, _usuario, detalle);
                 // Ejecución de Caso de Uso
                 _sistema.CmdRegistrarApunte(apunte);
                 // Presentación al usuario
@@ -107,40 +109,29 @@ namespace FinTech.UI.Consola
                 _vista.Mostrar($"UC: {e.Message}", ConsoleColor.DarkRed);
             }
         }
-        private void crudCategorias()
+        private void crudPrincipalesCategorias()
         {
-            crudCategoriasPorId(0, "Categorias principales");
+            crudCategorias(0, "CRUD Categorias principales");
         }
         private void crudSubCategorias()
         {
             while (true) try
                 {
-                    var parent = _vista.TryObtenerElementoDeLista("Categorias principales", _sistema.QryCategorias(), "Indica la categoría padre");
-                    crudCategoriasPorId(parent.Id, $"Subcategoria {parent.Descripcion}");
+                    var parent = _vista.TryObtenerElementoDeLista("Selección de Categoria", _sistema.QryCategorias(), "Indica la categoría padre");
+                    crudCategorias(parent.Id, $"CRUD Subcategoria {parent.Descripcion}");
                 }
                 catch { return; }
         }
-        private void crudCategoriasPorId(int parentId, string titulo)
+        private void crudCategorias(int parentId, string titulo)
         {
             while (true) try
                 {
                     var lista = _sistema.QryCategorias(parentId);
                     _vista.MostrarListaEnumerada<Categoria>(titulo, lista);
-                    char cud = _vista.TryObtenerCharFromString("C=Create, U=Update, D=Delete, F=Fin", "CUDF", 'F');
-                    // FIN
-                    if (cud == 'F') return;
-                    // CREATE
+                    char cud = _vista.TryObtenerCaracterDeString("C=Create, U=Update, D=Delete", "CUD", 'C');
                     if (cud == 'C') create(parentId);
-                    else
-                    {
-                        var idx = _vista.TryObtenerElementoEnRango(0, lista.Count, "Indica la línea");
-                        if (idx == 0) continue;
-                        Categoria cat = lista[idx - 1];
-                        // UPDATE
-                        if (cud == 'U') update(cat);
-                        // DELETE
-                        if (cud == 'D') delete(cat);
-                    }
+                    if (cud == 'U') update(selectCategoria(lista));
+                    if (cud == 'D') delete(selectCategoria(lista));
                 }
                 catch (Exception e)
                 {
@@ -161,6 +152,7 @@ namespace FinTech.UI.Consola
                 // Presentación al usuario
                 //_vista.Mostrar("Registro correcto");
             }
+
             void update(Categoria cat)
             {
                 string descripcion = _vista.TryObtenerDatoDeTipo<string>($"Descripción #{cat.Id}", cat.Descripcion);
@@ -168,59 +160,69 @@ namespace FinTech.UI.Consola
                 _sistema.CmdUpdateCategoria(cat);
                 //_vista.Mostrar("Registro actualizado");
             }
+
             void delete(Categoria cat)
             {
                 _sistema.CmdDeleteCategoria(cat);
                 //_vista.Mostrar("Registro eliminado");
             }
+
+            Categoria selectCategoria(List<Categoria> lista)
+            {
+                var idx = _vista.TryObtenerValorEnRangoInt(1, lista.Count, "Indica la línea");
+                return lista[idx - 1];
+            }
         }
+
+        // ====== MODO DEL TERMINAL =====
         private void establecerModoInterfaz()
         {
-            if (_modo > Modo.Anonimo)
+            switch (_modo)
             {
-                // Salimos de Modo.Admin y Usuario
-                // Logout
-                _modo = Modo.Anonimo;
+                case Modo.Usuario:
+                case Modo.Admin:
+                    establecerAnonimo();
+                    break;
+                case Modo.Anonimo:
+                    try
+                    {
+                        var username = _vista.TryObtenerDatoDeTipo<string>("Username");
+                        var password = _vista.TryObtenerDatoDeTipo<string>("Password").ToLower().Trim(); ;
+                        // Sólo validamos que el primer caracter para pasar a modo Admin/User
+                        if (!"au".Contains(password[0]))
+                            _vista.Mostrar("Acceso no permitido", ConsoleColor.DarkRed);
+                        if (password[0] == 'a')
+                            establecerAdmin(username);
+                        if (password[0] == 'u')
+                            establecerUsuario(username);
+                    }
+                    catch { return; };
+                    break;
             }
-            else
-                try
-                {
-                    var aux = _vista.TryObtenerDatoDeTipo<string>("Username").ToLower().Trim();
-                    var password = _vista.TryObtenerDatoDeTipo<string>("Password");
-                    // Sólo validamos que el primer caracter sea 'A' para pasar a modo Admin
-                    if ("Aa".Contains(password[0]))
-                    {
-                        // Entramos en Modo Admin
-                        _modo = Modo.Admin;
-                        _usuario = aux;
-                    }
-                    else
-                    {
-                        if ("Uu".Contains(password[0]))
-                        {
-                            // Entramos en Modo usuario
-                            _modo = Modo.Usuario;
-                            _usuario = aux;
-                        }
-                        else
-                        {
-                            _vista.Mostrar("Acceso no permitido");
-                            return;
-                        }
-                    }
-                }
-                catch { return; };
-
-            establecerMenu(_modo);
-            return;
-
-            void establecerMenu(Modo modo)
+            void establecerAnonimo()
+            {
+                _usuario = "anomious";
+                _modo = Modo.Anonimo;
+                establecerOpcionDeMenu(_menuModo[(int)_modo]);
+            };
+            void establecerUsuario(string username)
+            {
+                _usuario = username.ToLower().Trim();
+                _modo = Modo.Usuario;
+                establecerOpcionDeMenu($"Logout {username}");
+            };
+            void establecerAdmin(string username)
+            {
+                _usuario = username.ToLower().Trim();
+                _modo = Modo.Admin;
+                establecerOpcionDeMenu(_menuModo[(int)_modo]);
+            };
+            void establecerOpcionDeMenu(string opcion)
             {
                 var modoKey = _casosDeUso.FirstOrDefault(x => x.Value == establecerModoInterfaz).Key;
                 _casosDeUso.Remove(modoKey);
-                _casosDeUso.Add((_menuModo[(int)modo], modo), establecerModoInterfaz);
+                _casosDeUso.Add((opcion, _modo), establecerModoInterfaz);
             }
         }
-
     }
 }

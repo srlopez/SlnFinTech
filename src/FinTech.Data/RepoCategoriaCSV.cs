@@ -10,7 +10,6 @@ using System.Globalization;
 namespace FinTech.Data
 {
     using FinTech.Models;
-
     public class RepoCategoriaCSV : IRepoCategoria
     {
         private string _dataPath;
@@ -30,7 +29,7 @@ namespace FinTech.Data
         }
         void IRepoCategoria.Guardar(List<Categoria> categorias)
         {
-            var lines = new List<string> { "IDPARENT,ID,DESCRIPCION" };
+            var lines = new List<string> { "ID,SUBID,DESCRIPCION" };
             lines.AddRange(categorias.Select(i => i.ToCSVRow()));
 
             File.WriteAllLines(_file, lines);
