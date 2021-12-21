@@ -22,6 +22,13 @@ namespace FinTech.Models
         }
         
         public override string ToString() => $"{IdParent:00/;;#}{Id:00} {Descripcion}";
+
+
+        // ==== HELPERS DE CSV =====
+        // Estos métodos podrían estar en una clase CategoriaCSV estática
+        // Y denominarse FromRow, y ToRow, o similar
+        // Se podría generalizar y poner un [atributo] en cada campo que tuviese
+        // reflejo en el csv. [csv(1)]. A estudiar
         public static Categoria ParseRow(string row)
         {
             NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
