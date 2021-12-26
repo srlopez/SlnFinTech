@@ -37,7 +37,7 @@ namespace FinTech.UI.Consola
             _casosDeUso = new Dictionary<(string, Modo), Action>(){
                 { ("Consultar Categorias",Modo.Anonimo), qryCategorias },
                 { ("Consultar SubCategorias",Modo.Anonimo), qrySubCategorias },
-                { ("Consultar Apuntes",Modo.Anonimo), qryApuntes },
+                { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
                 { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
                 { ("Informe Importes",Modo.Usuario), qryInformesDeImportes },
                 { ("Mantenimiento de Categorias",Modo.Admin), crudPrincipalesCategorias },
