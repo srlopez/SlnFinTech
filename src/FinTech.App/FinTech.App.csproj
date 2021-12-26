@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FinTech.Data\FinTech.Data.csproj" />
     <ProjectReference Include="..\FinTech.App.Modelos\FinTech.App.Modelos.csproj" />
   </ItemGroup>

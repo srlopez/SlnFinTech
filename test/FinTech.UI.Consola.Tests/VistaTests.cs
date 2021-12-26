@@ -74,37 +74,5 @@ namespace FinTech.UI.Consola
             // Then
             Assert.Equal(esperado, resultado);
         }
-
-        [Fact]
-        public void MostrarParrilla_Test()
-        {
-            // Given
-            List<string>[,] datos = {
-                {
-                    new List<string>{"a1","a2"},
-                    new List<string>{"b1","b2"},
-                    new List<string>{"c1","c2"}
-                },
-                {
-                    new List<string>{"d1","d2"},
-                    new List<string>{"e1","e2"},
-                    new List<string>{"f1","f2"}
-                }
-            };
-            var vista = new Vista();
-            var output = new StringWriter();
-            Console.SetOut(output);
-            // When
-            vista.MostrarParrilla("hola", datos);
-            // Then
-
-            Assert.True(output.ToString().Contains("|a1        |b1        |"));
-            Assert.True(output.ToString().Contains("|a2        |b2        |"));
-            Assert.True(output.ToString().Contains("|e1        |f1        |"));
-            Assert.True(output.ToString().Contains("|e2        |f2        |"));
-            //....
-        }
-
-
     }
 }

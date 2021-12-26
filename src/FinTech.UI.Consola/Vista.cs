@@ -38,50 +38,7 @@ namespace FinTech.UI.Consola
             }
             WriteLine();
         }
-        public void MostrarParrilla(string titulo, List<string>[,] parrilla)
-        {
-            var alto = parrilla[0, 0].Count; //Numero de lineas de los elementos
-            const int ancho = 10; //Ancho de cada elemento
-            var filas = parrilla.GetLength(0);
-            var columnas = parrilla.GetLength(1);
-
-            const char charH = '-';
-            const char charV = '|';
-            const char charHV = '+';
-            var border = new string(charH, ancho);
-
-            MostrarIndiceColumnas(columnas);
-            MostrarSeparadorH(columnas);
-            for (var f = 0; f < filas; f++)
-            {
-                for (var i = 0; i < parrilla[0, 0].Count; i++)
-                {
-                    MostrarIndiceFila(f, i == alto % 2);
-                    for (var c = 0; c < columnas; c++)
-                    {
-                        Write($"{charV}{parrilla[f, c][i],-ancho}");
-                    }
-                    WriteLine(charV);
-                }
-                MostrarSeparadorH(columnas);
-            }
-            void MostrarSeparadorH(int len)
-            {
-                Write("  ");
-                for (var i = 0; i < len; i++) Write($"{charHV}{border}");
-                WriteLine(charHV);
-            }
-            void MostrarIndiceColumnas(int len)
-            {
-                Write("  ");
-                for (var c = 0; c < len; c++) Write($"  {c,5}    ");
-                WriteLine();
-            }
-            void MostrarIndiceFila(int f, bool show) =>
-                Write(show ? $"{f,-2}" : "  ");
-
-        }
-
+       
         // ===== METODOS DE CAPTURA DE INFORMACION =====
         // Refactoring C# Generics, Reflexion, PatternMaching, Tuples,
         public T TryObtenerDatoDeTipo<T>(string prompt, string @default = "")
