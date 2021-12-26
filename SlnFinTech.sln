@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTech.UI.Consola.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTech.Data", "src\FinTech.Data\FinTech.Data.csproj", "{AEC6BD7E-D587-4966-A6E6-144B9478A8BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintech.App.Modelos", "src\FinTech.App.Modelos\FinTech.App.Modelos.csproj", "{A23BDAB3-C0A0-46F7-8F49-BE83CB4CBD00}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTech.App.Modelos", "src\FinTech.App.Modelos\FinTech.App.Modelos.csproj", "{A23BDAB3-C0A0-46F7-8F49-BE83CB4CBD00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
