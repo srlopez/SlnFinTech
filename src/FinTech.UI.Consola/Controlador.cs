@@ -94,11 +94,12 @@ namespace FinTech.UI.Consola
             try
             {
                 // Obtencion de información de usuario
+                var fecha = _vista.TryObtenerFecha("Fecha del gasto");
                 var catPadre = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
                 var catHijo = _vista.TryObtenerElementoDeLista("Selección de SubCategoria", _sistema.QryCategorias(catPadre.Id), "Indica la subcategoría");
                 decimal importe = _vista.TryObtenerDatoDeTipo<decimal>("Introduzca Importe");
                 string detalle = _vista.TryObtenerDatoDeTipo<string>("Introduzca Detalle");
-                Apunte apunte = new Apunte(catPadre.Id, catHijo.Id, importe, _usuario, detalle);
+                Apunte apunte = new Apunte(fecha, catPadre.Id, catHijo.Id, importe, _usuario, detalle);
                 // Ejecución de Caso de Uso
                 _sistema.CmdRegistrarApunte(apunte);
                 // Presentación al usuario

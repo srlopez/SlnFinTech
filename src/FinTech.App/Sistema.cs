@@ -50,10 +50,10 @@ namespace FinTech
         }
 
         public List<Apunte> QryApuntes() => _apuntes.ToList();
-        public void CmdRegistrarApunte(Apunte dato)
+        public void CmdRegistrarApunte(Apunte gasto)
         {
-            _apuntes.Add(dato);
-            _apuntes = _apuntes.ToList();
+            _apuntes.Add(gasto);
+            _apuntes = _apuntes.OrderBy(a => a.FechaApunte).ToList();
             _apRepo.Guardar(_apuntes);
         }
     }

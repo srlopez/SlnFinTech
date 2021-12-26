@@ -26,7 +26,8 @@ namespace FinTech.Models
         }
 
         public override string ToString() =>
-            $"{FechaApunte:dd-MM-yy H:mm} {Usuario,-8} {CategoriaId:00}/{SubCategoriaId:00} {Importe.ToString("0.00").PadLeft(8)} {Detalle}";
+            $"{FechaApunte:dd-MM-yy} {Usuario,-8} {CategoriaId:00}/{SubCategoriaId:00} {Importe.ToString("0.00").PadLeft(8)} {Detalle}";
+            //$"{FechaApunte:dd-MM-yy H:mm} {Usuario,-8} {CategoriaId:00}/{SubCategoriaId:00} {Importe.ToString("0.00").PadLeft(8)} {Detalle}";
 
         // ==== HELPERS DE CSV =====
         // Estos métodos podrían estar en una clase ApunteCSV estática

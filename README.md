@@ -2,7 +2,7 @@
 Una familia decide centralizar todos los gastos familiares en una aplicación. 
 
 Cada mienbro generará registros de gastos que indican quién, cuándo, cuánto y para qué (clasificado el gasto en categoría y subcategoría), etc…   
-Se desea controlar quién puede ingresar un gasto y se desea obtener resúmenes de gastos de distintos tipos.   
+Se desea controlar quién puede ingresar un gasto y se desea obtener `resúmenes de gastos` de distintos tipos.   
 
 
 La aplicación presentará un menu para `usuario sin identificar`, en el que sólo podrá consultar las Categorías, un menu para `usuarios identificados`, que podrá consultar los registros de gastos e ingresar registros, y un `modo de administración` para gestionar las categorías.
@@ -10,15 +10,15 @@ La aplicación presentará un menu para `usuario sin identificar`, en el que só
 Ejemplo de datos
 **Gastos (ejemplos)**
 ```
-FECHA, USUARIO, CAT, SUBCAT, IMPORTE, DETALLE
-18-12-21 18:18,luis,3,31,123.45,Primer Apunte
-18-12-21 18:27,luis,5,51,123.00,Libros
-18-12-21 18:32,ama,3,32,123.00,Cinesa Urbil
-18-12-21 19:40,santi,4,41,200.30,comida Los Riojanos
-18-12-21 19:42,aita,6,60,23.00,Garbanzos ecológicos
-19-12-21 10:54,santi,2,21,200.34,Un parking caro
-19-12-21 10:58,santi,4,41,0.34,EL Sábado pasado
-19-12-21 12:10,aroa,4,41,34.56,Más copas en Donosti
+FECHA,          USUAR, CAT, SUBCAT, IMPORTE, DETALLE
+18-12-21 18:18, luis,   3,  31,     123.45, Primer Apunte
+18-12-21 18:27, luis,   5,  51,     123.00, Libros
+18-12-21 18:32, ama,    3,  32,     123.00, Cinesa Urbil
+18-12-21 19:40, santi,  4,  41,     200.30, comida Los Riojanos
+18-12-21 19:42, aita,   6,  60,     23.00,  Garbanzos ecológicos
+19-12-21 10:54, santi,  2,  21,     200.34, Un parking caro
+19-12-21 10:58, santi,  4,  41,     0.34,   EL Sábado pasado
+19-12-21 12:10, aroa,   4,4 1,      34.56,  Más copas en Donosti
 ```
 **Categorías y Subcategorías (ejemplos)**
 ```
