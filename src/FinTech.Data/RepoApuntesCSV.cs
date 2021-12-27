@@ -18,9 +18,9 @@ namespace FinTech.Data
 
         void IRepoApuntes.Inicializar()
         {
-            // TODO: Parametizar 
-            _dataPath = "../../data/";
-            _file = _dataPath + "apuntes.csv";
+            // TODO: Servicio de configuracion 
+            var config = AppServicios.Create<AppConfig>().Get();
+            _file = config.DataPath + "apuntes.csv";
         }
         List<Apunte> IRepoApuntes.Cargar()
         {

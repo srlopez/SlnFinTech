@@ -15,9 +15,9 @@ namespace FinTech.Data
 
         void IRepoCategoria.Inicializar()
         {
-            // TODO: Parametizar 
-            _dataPath = "../../data/";
-            _file = _dataPath + "categorias.csv";
+            // TODO: Servicio de configuracion 
+            var config = AppServicios.Create<AppConfig>().Get();
+            _file = config.DataPath +  "categorias.csv";
         }
         List<Categoria> IRepoCategoria.Cargar()
         {

@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FinTech.App.Modelos\FinTech.App.Modelos.csproj" />
+    <ProjectReference Include="..\FinTech.App.Core\FinTech.App.Core.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
