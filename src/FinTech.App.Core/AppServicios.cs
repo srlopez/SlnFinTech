@@ -6,18 +6,6 @@ using System.Text;
 namespace FinTech
 {
 
-/*
-BETA
-Todavía no está para integrar en el código
-Los parametros de inicialización de los servicios se haran por configuración
-
-IoCContainer.Registrar<IWelcomer, Welcomer>();
-IoCContainer.Registrar<IWriter, ConsoleWriter>();
-
-var welcomer = IoCContainer.Crear<IWelcomer>();
-welcomer.SayHelloTo("World");
-*/
-
 // Static para referenciarlo desde todos los componentes
 public static class AppServicios
 {
