@@ -13,7 +13,6 @@ namespace FinTech.Data
 
     public class RepoApuntesCSV : IRepoApuntes
     {
-        private string _dataPath;
         private string _file;
 
         void IRepoApuntes.Inicializar()

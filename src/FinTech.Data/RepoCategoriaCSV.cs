@@ -10,7 +10,6 @@ namespace FinTech.Data
     using FinTech.Models;
     public class RepoCategoriaCSV : IRepoCategoria
     {
-        private string _dataPath;
         private string _file;
 
         void IRepoCategoria.Inicializar()
