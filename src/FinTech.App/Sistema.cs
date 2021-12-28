@@ -7,12 +7,14 @@ namespace FinTech
 {
     public class Sistema
     {
-        IRepoCategoria _catRepo;
+        IRepoCategoria _catRepo; //Dependencia de datos
         IRepoApuntes _apRepo;
+        public ReglasDeNegocio Validador; // Dependencia no incluida en el constructor
+
+        #region Entidades de Negocio
         List<Categoria> _categorias;// = new() { };
         List<Apunte> _apuntes;// = new() { };
-        public ReglasDeNegocio Validador;
-
+        #endregion
         public Sistema(IRepoCategoria catRepo, IRepoApuntes apRepo)
         {
             _catRepo = catRepo;
@@ -27,6 +29,8 @@ namespace FinTech
 
             Validador = new ReglasDeNegocio();
         }
+
+        #region Categorias CRUD [Metodos]
         public List<Categoria> QryCategorias(int id = 0) => _categorias.Where(c => c.IdParent == id).ToList();
         public void CmdRegistrarCategoria(Categoria cat)
         {
@@ -48,7 +52,9 @@ namespace FinTech
             _categorias = _categorias.OrderBy(c => c.IdGlobal).ToList();
             _catRepo.Guardar(_categorias);
         }
+        #endregion
 
+        #region Apuntes CRUD [Metodos]
         public List<Apunte> QryApuntes() => _apuntes.ToList();
         public void CmdRegistrarApunte(Apunte gasto)
         {
@@ -56,5 +62,6 @@ namespace FinTech
             _apuntes = _apuntes.OrderBy(a => a.FechaApunte).ToList();
             _apRepo.Guardar(_apuntes);
         }
+        #endregion
     }
 }

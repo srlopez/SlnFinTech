@@ -17,16 +17,17 @@ namespace FinTech.UI.Consola
 
     public class Controlador
     {
-        // ===== DEPENDENCIAS =====
-        private Sistema _sistema;
-        private Vista _vista;
+        private Sistema _sistema; //Dependencia Lógica de Negocio
+        private Vista _vista; //Dependencia Terminal
 
-        // ===== MODO DE USO =====
+        #region Modo Terminal [Propiedades]
         private string _usuario; // Usuario Logeado
         private Modo _modo; //Modo de la Interfaz
         private string[] _menuModo = { "Login", "Logout", "Logout Admin" }; // Opciones del menu en funcion del modo
 
-        // ===== CASOS DE USO ==== 
+        #endregion
+        
+        #region Casos de Uso [Propiedades]
         private Dictionary<(string titulo, Modo modo), Action> _casosDeUso;
         public Controlador(Sistema sistema, Vista vista)
         {
@@ -45,8 +46,9 @@ namespace FinTech.UI.Consola
                 { (_menuModo[(int)_modo],Modo.Anonimo), establecerModoInterfaz },
             };
         }
+        #endregion
 
-        // ======== CICLO PRINCIPAL =====
+        #region Run
         public void Run()
         {
             _vista.LimpiarPantalla();
@@ -71,7 +73,9 @@ namespace FinTech.UI.Consola
                 }
         }
 
-        // =======  CASOS DE USO ========
+        #endregion
+        
+        #region Casos de Uso [Metodos]
         private void qryCategorias()
         {
             var catList = _sistema.QryCategorias(0);
@@ -175,7 +179,9 @@ namespace FinTech.UI.Consola
             }
         }
 
-        // ====== MODO DEL TERMINAL =====
+        #endregion
+        
+        #region Modo Terminal [Metodos]
         private void establecerModoInterfaz()
         {
             switch (_modo)
@@ -225,5 +231,6 @@ namespace FinTech.UI.Consola
                 _casosDeUso.Add((opcion, _modo), establecerModoInterfaz);
             }
         }
+        #endregion
     }
 }

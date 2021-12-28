@@ -13,13 +13,13 @@ namespace FinTech
 
         static AppServicios() { }
 
-        // === REGISTER ===
+        #region Register
         public static void Register<TImplementation>() =>
             Register<TImplementation, TImplementation>();
         public static void Register<TInterface, TImplementation>() where TImplementation : TInterface =>
             services[typeof(TInterface)] = (typeof(TImplementation), null);
-
-        // === CREATE ====
+        #endregion
+        #region Create
         public static TInterface Create<TInterface>(Object[] parameters = null) =>
                 (TInterface)Create(typeof(TInterface), parameters);
         public static object Create(Type type, Object[] concreteParams)
@@ -39,11 +39,11 @@ namespace FinTech
             concreteInstance = defaultConstructor.Invoke(parameters);
             // Actualizamos el registro
             services[type] = (concreteType, concreteInstance);
-            
+
             // Devolvemos la instancia
             return concreteInstance;
         }
-
+        #endregion
         // public static string ToString()
         // {
         //     var sb = new StringBuilder();
@@ -53,6 +53,7 @@ namespace FinTech
         //     return sb.ToString();
         // }
     }
+    #region TestServices
     public interface IWelcomer
     {
         void SayHelloTo(string name);
@@ -82,4 +83,5 @@ namespace FinTech
             Console.WriteLine(s);
         }
     }
+    #endregion
 }
