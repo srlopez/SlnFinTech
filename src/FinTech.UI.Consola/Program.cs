@@ -1,14 +1,14 @@
 using FinTech.UI.Consola;
 using FinTech.Data;
 using FinTech;
-// Servicio de configuración dinámica
+// Registramos los servicios
+// Servicio de configuración
 AppServicios.Register<AppConfig>();
 var appConfig = AppServicios.Create<AppConfig>();
 var config = appConfig.Get();
 config.Run = System.DateTime.Now;
-System.Console.WriteLine(config.App);
 appConfig.Save(config);
-// Servicios clásicos
+// Servicios clásicos 3 Capas
 AppServicios.Register<IRepoApuntes, RepoApuntesCSV>();
 AppServicios.Register<IRepoCategoria, RepoCategoriaCSV>();
 AppServicios.Register<Sistema>();
@@ -24,15 +24,9 @@ AppServicios.Register<Controlador>();
 // var repositorios = new object[] {repoCategorias, repoApuntes};
 // var sistema = IoCContainer.Create<Sistema>(repositorios);
 
+// Instanciamos el motor de la aplicación
 var controlador = AppServicios.Create<Controlador>();
 controlador.Run();
-
-
-// var repoCategorias = new RepoCategoriaCSV();
-// var repoApuntes = new RepoApuntesCSV();
-// var sistema = new Sistema(repoCategorias, repoApuntes);
-// var vista = new Vista();
-// var controlador = new Controlador(sistema, vista);
 
 
 

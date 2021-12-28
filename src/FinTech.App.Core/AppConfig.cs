@@ -7,7 +7,7 @@ namespace FinTech
     {
         private string getAppPath() => Path.GetFullPath("../../");
         private string getDataPath() =>Path.Combine(getAppPath(), "data/");
-        private string getFileName() =>Path.Combine(getDataPath(), "config.json");
+        private string getFileName() =>Path.Combine(getDataPath(), "AppConfig.json");
         
         public dynamic Get()
         {
