@@ -3,6 +3,7 @@ using FinTech.Data;
 using FinTech;
 #region Registro de servicios
 // Servicio de configuración
+AppServicios.Register<ILog,ConsoleLog>();
 AppServicios.Register<AppConfig>();
 var appConfig = AppServicios.Create<AppConfig>();
 var config = appConfig.Get();
