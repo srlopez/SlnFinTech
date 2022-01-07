@@ -38,7 +38,7 @@ namespace FinTech.UI.Consola
             }
             WriteLine();
         }
-       
+
         // ===== METODOS DE CAPTURA DE INFORMACION =====
         // Refactoring C# Generics, Reflexion, PatternMaching, Tuples,
         public T TryObtenerDatoDeTipo<T>(string prompt, string @default = "")
@@ -76,9 +76,9 @@ namespace FinTech.UI.Consola
                 {
                     input = TryObtenerDatoDeTipo<int>(prompt);
                 }
-                catch (Exception e)
+                catch (Exception)// e)
                 {
-                    throw e;
+                    throw; // e;
                 };
             return input;
         }
@@ -90,9 +90,9 @@ namespace FinTech.UI.Consola
                 var input = TryObtenerValorEnRangoInt(1, datos.Count, prompt);
                 return datos[input - 1];
             }
-            catch (Exception e)
+            catch (Exception)// e)
             {
-                throw e;
+                throw; // e;
             };
         }
         public (int x, int y) TryObtenerTuplaInt(string prompt, (int xMax, int yMax) limites)
