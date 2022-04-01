@@ -3,6 +3,8 @@ using System.Linq;
 using FinTech.Models;
 using FinTech.Data;
 
+using System.Linq;
+
 namespace FinTech
 {
     public class Sistema
@@ -13,8 +15,8 @@ namespace FinTech
         public ReglasDeNegocio Validador; // Dependencia no incluida en el constructor
 
         #region Entidades de Negocio
-        List<Categoria> _categorias;// = new() { };
-        List<Apunte> _apuntes;// = new() { };
+        List<Categoria> _categorias = new() { };
+        List<Apunte> _apuntes = new() { };
         #endregion
         public Sistema(IRepoCategoria catRepo, IRepoApuntes apRepo, ILog log)
         {
@@ -68,6 +70,25 @@ namespace FinTech
 
         #region Apuntes CRUD [Metodos]
         public List<Apunte> QryApuntes() => _apuntes.ToList();
+        public List<ImporteCategoria> QryImporteApuntes(int Id = 0)
+        {
+            var grp = Id switch
+            {
+                0 => _apuntes.GroupBy(ap => ap.CategoriaId),
+                _ => _apuntes.Where(ap => ap.CategoriaId == Id).GroupBy(ap => ap.SubCategoriaId),
+            };
+
+            return grp
+                .Select(grp => new ImporteCategoria
+                {
+                    CategoriaId = grp.Key,
+                    Categoria = _categorias.FirstOrDefault(cat => cat.IdParent == Id & cat.Id == grp.Key).Descripcion,
+                    Importe = grp.Sum(ap => ap.Importe)
+                })
+                .OrderBy(imp=>imp.CategoriaId)
+                .ToList();
+        }
+
         public void CmdRegistrarApunte(Apunte gasto)
         {
             _apuntes.Add(gasto);

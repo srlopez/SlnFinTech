@@ -38,6 +38,7 @@ namespace FinTech.UI.Consola
             _casosDeUso = new Dictionary<(string, Modo), Action>(){
                 { ("Consultar Categorias",Modo.Anonimo), qryCategorias },
                 { ("Consultar SubCategorias",Modo.Anonimo), qrySubCategorias },
+                { ("Consultar Gasto por Categorías",Modo.Usuario), qryImportesXCategoria },
                 { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
                 { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
                 { ("Informe Importes",Modo.Usuario), qryInformesDeImportes },
@@ -86,6 +87,15 @@ namespace FinTech.UI.Consola
             var catParent = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
             var lista = _sistema.QryCategorias(catParent.Id);
             _vista.MostrarListaEnumerada<Categoria>($"SubCategoria {catParent.Descripcion}", lista);
+        }
+
+        private void qryImportesXCategoria()
+        {
+            var categorias = _sistema.QryCategorias();
+            _vista.MostrarListaEnumerada("Selección de Categoria principal",categorias);
+            var cat = _vista.TryObtenerValorEnRangoInt(0,categorias.Count,"Selección de Categoria principal (0=todas)");
+            var impList = _sistema.QryImporteApuntes(cat);
+            _vista.MostrarListaEnumerada<ImporteCategoria>("Consulta de Importes x Categoria", impList);
         }
         private void qryApuntes()
         {

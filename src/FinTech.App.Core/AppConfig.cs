@@ -5,13 +5,14 @@ namespace FinTech
 {
     public class AppConfig
     {
-        //private string getAppPath() => Path.GetFullPath("../../");
-        //private string getDataPath() =>Path.Combine(getAppPath(), "data/");
         public static string DataPath
         {
             get => typeof(AppConfig).Assembly.Location.Split("src")[0] + "data/";
         }
-        private string getFileName() => Path.Combine(DataPath, "AppConfig.json");
+        private string ConfigFileName
+        {
+            get => Path.Combine(DataPath, "AppConfig.json");
+        }
 
 
         public dynamic Get()
@@ -19,7 +20,7 @@ namespace FinTech
             string txtJson;
             try
             {
-                txtJson = File.ReadAllText(getFileName());
+                txtJson = File.ReadAllText(ConfigFileName);
             }
             catch
             {
@@ -35,7 +36,7 @@ namespace FinTech
         public void Save(dynamic Config)
         {
             string json = JsonConvert.SerializeObject(Config, Formatting.Indented);
-            File.WriteAllText(getFileName(), json);
+            File.WriteAllText(ConfigFileName, json);
         }
     }
 }
