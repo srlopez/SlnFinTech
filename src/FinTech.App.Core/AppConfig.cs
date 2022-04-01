@@ -26,12 +26,11 @@ namespace FinTech
                 txtJson = JsonConvert.SerializeObject(new
                 {
                     App = new DirectoryInfo(DataPath).Name,
-                    DataPath = DataPath,
                 });
-                Save(JsonConvert.DeserializeObject(txtJson));
             }
-            return JsonConvert.DeserializeObject(txtJson);
-
+            dynamic config= JsonConvert.DeserializeObject(txtJson);
+            config.DataPath = DataPath;
+            return config;
         }
         public void Save(dynamic Config)
         {
