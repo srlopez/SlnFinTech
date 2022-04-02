@@ -9,98 +9,87 @@ using FinTech.Models;
 
 namespace FinTech.UI.WinForms
 {
-  
+
     public class CalculadoraDeAreas
     {
         public class Area
         {
-            public int x;
-            public int y;
-            public int w;
-            public int h;
-
-            public Area(int x, int y, int w, int h)
-            {
-                this.x = x;
-                this.y = y;
-                this.w = w;
-                this.h = h;
-            }
+            public int x { get; set; }
+            public int y { get; set; }
+            public int w { get; set; }
+            public int h { get; set; }
 
             public String toString() => $"Area [{x},{y},{h},{w}]";
-            
         }
 
-        public static Dictionary<Area, ImporteCategoria> calcularAreas(Area area, IEnumerable<ImporteCategoria> list)
-        {
-            Dictionary<Area, ImporteCategoria> result = new Dictionary<Area, ImporteCategoria>();
-            var listImportes = list.OrderByDescending(imp => imp.Importe);
-            calcularAreaResult(area, listImportes, result);
-            return result;
-        }
+        public static Dictionary<Area, ImporteCategoria> CalcularAreas(Area area, IEnumerable<ImporteCategoria> importes) =>
+             CalcularSubAreas(
+                area,
+                // IMPORTANTE Ordenar descendentemente la lista
+                importes.OrderByDescending(imp => imp.Importe)
+             );
 
-        private static void calcularAreaResult(Area area, IEnumerable<ImporteCategoria> list, Dictionary<Area, ImporteCategoria> result)
+        private static Dictionary<Area, ImporteCategoria> CalcularSubAreas(Area area, IEnumerable<ImporteCategoria> importes)
         {
-            // Manejar el fin de la recursividad
-            if (list.Count() < 1)
-                return;
+            var areas = new Dictionary<Area, ImporteCategoria>();
 
-            if (list.Count() == 1)
+            switch (importes.Count())
             {
-                result[area]= list.First();
-                return;
-            }
+                case < 1:
+                    break;
+                case 1:
+                    areas[area] = importes.First();
+                    break;
+                default:
+                    var subLista = DividirListaImportes(importes);
+                    var subArea = DividirArea(area, importes.Sum(i => i.Importe), subLista[0].Sum(i => i.Importe));
 
-            // Crear dos listas
-            (var list1, var list2 ) = dividirLista(list);
-            // Pintar los dos paneles
-            Decimal sum = list.Sum(i=>i.Importe);
-            Decimal sum1 = list1.Sum(i => i.Importe);
-            // Horizontal o vertical
-            int w = area.w;
-            int h = area.h;
-            int h1, h2, w1, w2;
-            Area area1;
-            Area area2;
-            if (w < h)
+                    var a = CalcularSubAreas(subArea[0], subLista[0]);
+                    var b = CalcularSubAreas(subArea[1], subLista[1]);
+
+                    areas = areas.Concat(a).Concat(b).ToDictionary(x => x.Key, x => x.Value);
+                    break;
+            };
+
+            return areas;
+        }
+
+        private static Area[] DividirArea(Area area, Decimal todo, Decimal parte)
+        {
+            var subArea = new Area[2];
+
+            // Horizontal o Vertical
+            if (area.w < area.h)
             {
                 // Vertical
-                h1 = (int)(h * sum1 / sum);
-                h2 = h - h1;
-                area1 = new Area(area.x, area.y, w, h1);
-                area2 = new Area(area.x, area.y + h1, w, h2);
+                var h1 = (int)(area.h * parte / todo);
+                var h2 = area.h - h1;
+                subArea[0] = new Area { x = area.x, y = area.y, w = area.w, h = h1 };
+                subArea[1] = new Area { x = area.x, y = area.y + h1, w = area.w, h = h2 };
             }
             else
             {
                 // Horizontal
-                w1 = (int)(w * sum1 / sum);
-                w2 = w - w1;
-                area1 = new Area(area.x, area.y, w1, h);
-                area2 = new Area(area.x + w1, area.y, w2, h);
+                var w1 = (int)(area.w * parte / todo);
+                var w2 = area.w - w1;
+                subArea[0] = new Area { x = area.x, y = area.y, w = w1, h = area.h };
+                subArea[1] = new Area { x = area.x + w1, y = area.y, w = w2, h = area.h };
             }
-            calcularAreaResult(area1, list1, result);
-            calcularAreaResult(area2, list2, result);
+            return subArea;
         }
-
-        private static (IEnumerable<ImporteCategoria>, IEnumerable<ImporteCategoria>) dividirLista(IEnumerable<ImporteCategoria> list)
+        private static List<ImporteCategoria>[] DividirListaImportes(IEnumerable<ImporteCategoria> importes)
         {
-            var list1 = new List<ImporteCategoria>();
-            var list2 = new List<ImporteCategoria>();
+            var listas = new List<ImporteCategoria>[2] { new(), new() };
 
-            Decimal sum1 = 0M;
-            Decimal mitad = list.Sum(i => i.Importe) / 2;
-            int i = 0;
-            do
+            decimal mitadImporteTotal = importes.Sum(i => i.Importe) / 2;
+            decimal acumImporte = 0M;
+            foreach (ImporteCategoria imp in importes)
             {
-                list1.Add(list.ElementAt(i));
-                sum1 += list.ElementAt(i).Importe;
-                i++;
-            } while (sum1 + list.ElementAt(i).Importe < mitad);
-
-            for (; i < list.Count(); i++)
-                list2.Add(list.ElementAt(i));
-
-            return (list1, list2);
+                var i = (acumImporte < mitadImporteTotal) ? 0 : 1;
+                listas[i].Add(imp);
+                acumImporte += imp.Importe;
+            }
+            return listas;
         }
 
     }
