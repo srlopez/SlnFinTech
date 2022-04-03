@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FinTech.Models;
@@ -69,12 +70,24 @@ namespace FinTech
 
         #region Apuntes CRUD [Metodos]
         public List<Apunte> QryApuntes() => _apuntes.ToList();
-        public List<GastoPorCategoria> QryImporteApuntes(int Id = 0)
+        public void CmdRegistrarApunte(Apunte gasto)
+        {
+            _apuntes.Add(gasto);
+            _apuntes = _apuntes.OrderBy(a => a.FechaApunte).ToList();
+            _apRepo.Guardar(_apuntes);
+            _log.Write($"CmdRegistrarApunte {gasto}");
+        }
+        #endregion
+
+        // Gastos X Cat + Inyección de predicado
+        public List<GastoPorCategoria> QryImporteDeGastoPorCategoria(Func<Apunte,bool> filtro, int Id = 0) => QryImporteDeGastoPorCategoria(_apuntes.Where(filtro), Id);
+        public List<GastoPorCategoria> QryImporteDeGastoPorCategoria(int Id = 0) =>QryImporteDeGastoPorCategoria(_apuntes, Id);          
+        private List<GastoPorCategoria> QryImporteDeGastoPorCategoria(IEnumerable<Apunte> apuntes, int Id = 0)
         {
             var grp = Id switch
             {
-                0 => _apuntes.GroupBy(ap => ap.CategoriaId),
-                _ => _apuntes.Where(ap => ap.CategoriaId == Id).GroupBy(ap => ap.SubCategoriaId),
+                0 => apuntes.GroupBy(ap => ap.CategoriaId),
+                _ => apuntes.Where(ap => ap.CategoriaId == Id).GroupBy(ap => ap.SubCategoriaId),
             };
 
             return grp
@@ -87,14 +100,5 @@ namespace FinTech
                 .OrderBy(imp=>imp.CategoriaId)
                 .ToList();
         }
-
-        public void CmdRegistrarApunte(Apunte gasto)
-        {
-            _apuntes.Add(gasto);
-            _apuntes = _apuntes.OrderBy(a => a.FechaApunte).ToList();
-            _apRepo.Guardar(_apuntes);
-            _log.Write($"CmdRegistrarApunte {gasto}");
-        }
-        #endregion
     }
 }

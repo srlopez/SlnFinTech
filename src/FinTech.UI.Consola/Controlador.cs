@@ -38,7 +38,8 @@ namespace FinTech.UI.Consola
             _casosDeUso = new Dictionary<(string, Modo), Action>(){
                 { ("Consultar Categorias",Modo.Anonimo), qryCategorias },
                 { ("Consultar SubCategorias",Modo.Anonimo), qrySubCategorias },
-                { ("Consultar Gasto por Categorías",Modo.Usuario), qryImportesXCategoria },
+                { ("Consultar Gasto por Categorías",Modo.Usuario), qryImportesXCategoriaSinFiltro },
+                { ("Consultar Gasto por Usuario",Modo.Usuario),qryImportesXCategoriaFiltradoXUsuario},
                 { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
                 { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
                 { ("Informe Importes",Modo.Usuario), qryInformesDeImportes },
@@ -97,8 +98,15 @@ namespace FinTech.UI.Consola
             - Usuario
             - Ambos
         */
+        private void qryImportesXCategoriaFiltradoXUsuario(){
+            string usr = _vista.TryObtenerDatoDeTipo<string>("Introduzca Usuario");
+            var impList0 = _sistema.QryImporteDeGastoPorCategoria((a)=>a.Usuario==usr);
+            var cat = _vista.TryObtenerElementoDeLista("Gastos x Categorias", impList0, "Indica una categoría");
+            var impList1 = _sistema.QryImporteDeGastoPorCategoria(cat.Id);
+            _vista.MostrarListaEnumerada<GastoPorCategoria>("Gastos x SubCategoria", impList1);
+        }
 
-        private void qryImportesXCategoria()
+        private void qryImportesXCategoriaSinFiltro()
         {
             /*
             var categorias = _sistema.QryCategorias();
@@ -106,9 +114,9 @@ namespace FinTech.UI.Consola
             var cat = _vista.TryObtenerValorEnRangoInt(0,categorias.Count,"Selección de Categoria principal (0=todas)");
             */
 
-            var impList0 = _sistema.QryImporteApuntes(0);
+            var impList0 = _sistema.QryImporteDeGastoPorCategoria();
             var cat = _vista.TryObtenerElementoDeLista("Gastos x Categorias", impList0, "Indica una categoría");
-            var impList1 = _sistema.QryImporteApuntes(cat.Id);
+            var impList1 = _sistema.QryImporteDeGastoPorCategoria(cat.Id);
             _vista.MostrarListaEnumerada<GastoPorCategoria>("Gastos x SubCategoria", impList1);
         }
         private void qryApuntes()
