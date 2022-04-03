@@ -30,15 +30,18 @@ namespace FinTech
             _apRepo = apRepo;
             _apRepo.Inicializar();
             //_apuntes.AddRange(_apRepo.Cargar());
-            _apuntes=_apRepo.Cargar();
+            _apuntes = _apRepo.Cargar();
 
             Validador = new ReglasDeNegocio();
 
             _log.Write("Aplicación iniciada...");
         }
 
-        #region Categorias CRUD [Metodos]
         public List<Categoria> QryCategorias(int id = 0) => _categorias.Where(c => c.IdParent == id).ToList();
+        public List<Apunte> QryApuntes() => _apuntes.ToList();
+        public List<String> QryUsuarios() => _apuntes.Select(a => a.Usuario).Distinct().ToList();
+
+        #region Categorias CRUD [Metodos]
         public void CmdRegistrarCategoria(Categoria cat)
         {
             _categorias.Add(cat);
@@ -64,12 +67,11 @@ namespace FinTech
             _catRepo.Guardar(_categorias);
             _log.Write($"CmdDeleteCategoria {cat}");
 
-            
+
         }
         #endregion
 
         #region Apuntes CRUD [Metodos]
-        public List<Apunte> QryApuntes() => _apuntes.ToList();
         public void CmdRegistrarApunte(Apunte gasto)
         {
             _apuntes.Add(gasto);
@@ -79,25 +81,27 @@ namespace FinTech
         }
         #endregion
 
-        // Gastos X Cat + Inyección de predicado
-        public List<GastoPorCategoria> QryImporteDeGastoPorCategoria(Func<Apunte,bool> filtro, int Id = 0) => QryImporteDeGastoPorCategoria(_apuntes.Where(filtro), Id);
-        public List<GastoPorCategoria> QryImporteDeGastoPorCategoria(int Id = 0) =>QryImporteDeGastoPorCategoria(_apuntes, Id);          
-        private List<GastoPorCategoria> QryImporteDeGastoPorCategoria(IEnumerable<Apunte> apuntes, int Id = 0)
+        // Gastos X Cat + Inyección de predicado        
+        public List<GastoPorCategoria> QryImporteDeGastoPorCategoria(Func<Apunte, bool> predicado = null, int id = 0)
+            => QryImporteDeGastoPorCategoria(
+                    predicado is null ? _apuntes : _apuntes.Where(predicado), id
+                );
+        private List<GastoPorCategoria> QryImporteDeGastoPorCategoria(IEnumerable<Apunte> apuntes, int id)
         {
-            var grp = Id switch
+            var grp = id switch
             {
                 0 => apuntes.GroupBy(ap => ap.CategoriaId),
-                _ => apuntes.Where(ap => ap.CategoriaId == Id).GroupBy(ap => ap.SubCategoriaId),
+                _ => apuntes.Where(ap => ap.CategoriaId == id).GroupBy(ap => ap.SubCategoriaId),
             };
 
             return grp
                 .Select(grp => new GastoPorCategoria
                 {
                     CategoriaId = grp.Key,
-                    Categoria = _categorias.FirstOrDefault(cat => cat.IdParent == Id & cat.Id == grp.Key).Descripcion,
+                    Categoria = _categorias.FirstOrDefault(cat => cat.IdParent == id & cat.Id == grp.Key).Descripcion,
                     Importe = grp.Sum(ap => ap.Importe)
                 })
-                .OrderBy(imp=>imp.CategoriaId)
+                .OrderBy(imp => imp.CategoriaId)
                 .ToList();
         }
     }

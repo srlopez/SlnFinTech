@@ -148,7 +148,7 @@ namespace FinTech.UI.Consola
         }
         public DateTime TryObtenerFecha(string prompt)
         {
-            var promptF = prompt.Trim() + " (d/m/a4): ";
+            var promptF = prompt.Trim() + " (d/m/a4)";
             while (true)
             {
                 var input = TryObtenerArrayInt(promptF, 3, '/');
