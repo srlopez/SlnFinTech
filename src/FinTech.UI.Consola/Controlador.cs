@@ -88,14 +88,28 @@ namespace FinTech.UI.Consola
             var lista = _sistema.QryCategorias(catParent.Id);
             _vista.MostrarListaEnumerada<Categoria>($"SubCategoria {catParent.Descripcion}", lista);
         }
+        
+        
+        /*
+        TODO: Inyección de predicado
+        Gastos por categoría filtrados por 
+            - Desde/Hasta Fecha
+            - Usuario
+            - Ambos
+        */
 
         private void qryImportesXCategoria()
         {
+            /*
             var categorias = _sistema.QryCategorias();
             _vista.MostrarListaEnumerada("Selección de Categoria principal",categorias);
             var cat = _vista.TryObtenerValorEnRangoInt(0,categorias.Count,"Selección de Categoria principal (0=todas)");
-            var impList = _sistema.QryImporteApuntes(cat);
-            _vista.MostrarListaEnumerada<Superficiable>("Consulta de Importes x Categoria", impList);
+            */
+
+            var impList0 = _sistema.QryImporteApuntes(0);
+            var cat = _vista.TryObtenerElementoDeLista("Gastos x Categorias", impList0, "Indica una categoría");
+            var impList1 = _sistema.QryImporteApuntes(cat.Id);
+            _vista.MostrarListaEnumerada<GastoPorCategoria>("Gastos x SubCategoria", impList1);
         }
         private void qryApuntes()
         {
