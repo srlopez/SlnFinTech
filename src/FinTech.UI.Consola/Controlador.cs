@@ -38,10 +38,10 @@ namespace FinTech.UI.Consola
             _casosDeUso = new Dictionary<(string, Modo), Action>(){
                 { ("Consultar Categorias",Modo.Anonimo), qryCategorias },
                 { ("Consultar SubCategorias",Modo.Anonimo), qrySubCategorias },
-                { ("Consultar Gasto por Categorías",Modo.Usuario), qryImportesXCategoriaSinFiltro },
-                { ("Consultar Gasto por Usuario",Modo.Usuario),qryImportesXCategoriaFiltradoXUsuario},
-                { ("Consultar Gasto entre fechas",Modo.Usuario),qryImportesXCategoriaFiltradoXFecha},
-                { ("Consultar Gasto por Usuario entre fechas",Modo.Usuario),qryImportesXCategoriaFiltradoXUsuarioYFecha},
+                { ("Informe Gastos por Categorías",Modo.Usuario), qryImportesXCategoriaSinFiltro },
+                { ("Informe Gastos por Usuario",Modo.Usuario),qryImportesXCategoriaFiltradoXUsuario},
+                { ("Informe Gastos entre fechas",Modo.Usuario),qryImportesXCategoriaFiltradoXFecha},
+                { ("Informe Gastos por Usuario entre fechas",Modo.Usuario),qryImportesXCategoriaFiltradoXUsuarioYFecha},
                 { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
                 { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
                 { ("Informe Importes",Modo.Usuario), qryInformesDeImportes },
@@ -100,7 +100,7 @@ namespace FinTech.UI.Consola
             //string usr = _vista.TryObtenerDatoDeTipo<string>("Introduzca Usuario");
             var usr = _vista.TryObtenerElementoDeLista<string>("Usuarios", _sistema.QryUsuarios(), "Indica un Usuario");
             Func<Apunte, bool> where = (a) => a.Usuario == usr;
-            ImportesXCategoriaFiltrado("Gastos X Usuario", where);
+            ImportesXCategoriaFiltrado($"Gastos X Usuario {usr}", where);
         }
         private void qryImportesXCategoriaFiltradoXFecha()
         {
@@ -115,10 +115,10 @@ namespace FinTech.UI.Consola
             var inicio = _vista.TryObtenerFecha("Desde Fecha");
             var fin = _vista.TryObtenerFecha("Hasta Fecha");
             Func<Apunte, bool> where = (a) => a.Usuario == usr && a.FechaApunte >= inicio && a.FechaApunte < fin;
-            ImportesXCategoriaFiltrado("Gastos X Usuario Entre Fechas", where);
+            ImportesXCategoriaFiltrado($"Gastos X Usuario {usr} Entre Fechas", where);
         }
         private void qryImportesXCategoriaSinFiltro() =>
-            ImportesXCategoriaFiltrado("Gastos X Usuario Entre Fechas");
+            ImportesXCategoriaFiltrado("Gastos Familiares");
         /*
         var categorias = _sistema.QryCategorias();
         _vista.MostrarListaEnumerada("Selección de Categoria principal",categorias);
@@ -132,7 +132,7 @@ namespace FinTech.UI.Consola
             var impList0 = _sistema.QryImporteDeGastoPorCategoria(predicado: where);
             if (impList0.Count == 0)
             {
-                _vista.MostrarYReturn("No hay registros seleccionados");
+                _vista.Mostrar("No hay registros seleccionados");
                 return;
             }
             var cat = _vista.TryObtenerElementoDeLista(title, impList0, "Indica una categoría");

@@ -1,8 +1,8 @@
 # FinTech familiar
 Una familia decide centralizar todos los gastos familiares en una aplicación. 
 
-Cada mienbro generará registros de gastos que indican quién, cuándo, cuánto y para qué (clasificado el gasto en categoría y subcategoría), etc…   
-Se desea controlar quién puede ingresar un gasto y se desea obtener `resúmenes de gastos` de distintos tipos.   
+Cada miembro generará registros de gastos con su nombre, y cuándo, cuánto y para qué (clasificado el gasto en categoría y subcategoría), etc…   
+El administrador desea controlar quién puede ingresar un gasto y se desea obtener `resúmenes de gastos` (informes) con distintos parámetros.   
 
 
 La aplicación presentará un menu para `usuario sin identificar`, en el que sólo podrá consultar las Categorías, un menu para `usuarios identificados`, que podrá consultar los registros de gastos e ingresar registros, y un `modo de administración` para gestionar las categorías.
@@ -68,3 +68,6 @@ FECHA,          USUAR, CAT, SUBCAT, IMPORTE, DETALLE
 9,99,Otros
 ```
 
+Desarrollar la arquitectura estudiada, y trabajar la inyección de predicado para los distintos informes de importes de gastos.
+
+En WinForms presetar los informes en forma de [gráfico de rectángulos](https://www.get-digital-help.com/es/c%C3%B3mo-crear-un-gr%C3%A1fico-de-treemap/) aproximado.

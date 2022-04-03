@@ -9,6 +9,6 @@ namespace FinTech.Models
         public string Categoria { get => base.Nombre; init => base.Nombre = value; }
         public decimal Importe { get => base.Valor; init => base.Valor = value; }
 
-        public override string ToString() => $"{CategoriaId:00} {Categoria} {Importe:00.00;;#}";
+        public override string ToString() => String.Format("{0,2:00} {1,-21} {2,8:00.00;;#}€",CategoriaId,Categoria,Importe);
     }
 }

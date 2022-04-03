@@ -6,7 +6,7 @@ namespace FinTech
     {
         void Write(Object o);
     }
-    public class ConsoleLog : ILog
+    public class AppLog : ILog
     {
         public void Write(Object o)
         {

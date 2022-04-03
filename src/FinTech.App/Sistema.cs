@@ -83,18 +83,22 @@ namespace FinTech
 
         // Gastos X Cat + Inyección de predicado        
         public List<GastoPorCategoria> QryImporteDeGastoPorCategoria(Func<Apunte, bool> predicado = null, int id = 0)
-            => QryImporteDeGastoPorCategoria(
-                    predicado is null ? _apuntes : _apuntes.Where(predicado), id
-                );
+        {
+
+            var apWhereId = id == 0 ? _apuntes : _apuntes.Where(a => a.CategoriaId == id);
+            var apWhere = predicado is null ? apWhereId : apWhereId.Where(predicado);
+
+            return QryImporteDeGastoPorCategoria(apWhere, id);
+        }
         private List<GastoPorCategoria> QryImporteDeGastoPorCategoria(IEnumerable<Apunte> apuntes, int id)
         {
             var grp = id switch
             {
                 0 => apuntes.GroupBy(ap => ap.CategoriaId),
-                _ => apuntes.Where(ap => ap.CategoriaId == id).GroupBy(ap => ap.SubCategoriaId),
+                _ => apuntes.Where(a => a.CategoriaId == id).GroupBy(ap => ap.SubCategoriaId),
             };
 
-            return grp
+            var result = grp
                 .Select(grp => new GastoPorCategoria
                 {
                     CategoriaId = grp.Key,
@@ -103,6 +107,9 @@ namespace FinTech
                 })
                 .OrderBy(imp => imp.CategoriaId)
                 .ToList();
+
+            _log.Write($"Cat #{id} {apuntes.Count()} apuntes => {result.Count} categorías");
+            return result;
         }
     }
 }
