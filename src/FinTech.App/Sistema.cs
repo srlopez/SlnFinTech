@@ -3,7 +3,6 @@ using System.Linq;
 using FinTech.Models;
 using FinTech.Data;
 
-using System.Linq;
 
 namespace FinTech
 {
@@ -70,7 +69,7 @@ namespace FinTech
 
         #region Apuntes CRUD [Metodos]
         public List<Apunte> QryApuntes() => _apuntes.ToList();
-        public List<ImporteCategoria> QryImporteApuntes(int Id = 0)
+        public List<GastoPorCategoria> QryImporteApuntes(int Id = 0)
         {
             var grp = Id switch
             {
@@ -79,7 +78,7 @@ namespace FinTech
             };
 
             return grp
-                .Select(grp => new ImporteCategoria
+                .Select(grp => new GastoPorCategoria
                 {
                     CategoriaId = grp.Key,
                     Categoria = _categorias.FirstOrDefault(cat => cat.IdParent == Id & cat.Id == grp.Key).Descripcion,

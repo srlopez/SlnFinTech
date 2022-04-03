@@ -95,7 +95,7 @@ namespace FinTech.UI.Consola
             _vista.MostrarListaEnumerada("Selección de Categoria principal",categorias);
             var cat = _vista.TryObtenerValorEnRangoInt(0,categorias.Count,"Selección de Categoria principal (0=todas)");
             var impList = _sistema.QryImporteApuntes(cat);
-            _vista.MostrarListaEnumerada<ImporteCategoria>("Consulta de Importes x Categoria", impList);
+            _vista.MostrarListaEnumerada<Superficiable>("Consulta de Importes x Categoria", impList);
         }
         private void qryApuntes()
         {
