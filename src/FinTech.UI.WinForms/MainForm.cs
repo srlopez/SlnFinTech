@@ -1,4 +1,5 @@
 using FinTech.Models;
+using FinTech.Tools;
 
 namespace FinTech.UI.WinForms
 {
@@ -71,20 +72,21 @@ namespace FinTech.UI.WinForms
         }
         private void CrearControles()
         {
-            var areaContenedora = new CalculadoraDeSuperficies<GastoPorCategoria>.Area { x = 0, y = 0, w = pnlControles.Width, h = pnlControles.Height };
-            var areasContenidas = CalculadoraDeSuperficies<GastoPorCategoria>.CalcularAreas(areaContenedora, _importes);
+            var areaPanel = new CalculadoraDeSuperficies<GastoPorCategoria>.Area { x = 0, y = 0, w = pnlControles.Width, h = pnlControles.Height };
+            var areasCtrl = CalculadoraDeSuperficies<GastoPorCategoria>.CalcularAreas(areaPanel, _importes);
 
             pnlControles.Controls.Clear();
-            foreach (CalculadoraDeSuperficies<GastoPorCategoria>.Area area in areasContenidas.Keys)
+            foreach (CalculadoraDeSuperficies<GastoPorCategoria>.Area a in areasCtrl.Keys)
             {
                 var ctrl = new Button();
-                var txt = string.Format("{0}\n{1}€", areasContenidas[area].Nombre, areasContenidas[area].Valor);
-                ctrl.Location = new System.Drawing.Point(area.x, area.y);
-                ctrl.Size = new System.Drawing.Size(area.w, area.h);
+                var txt = string.Format("{0}\n{1}€", areasCtrl[a].Nombre, areasCtrl[a].Valor);
+                ctrl.Location = new System.Drawing.Point(a.x, a.y);
+                ctrl.Size = new System.Drawing.Size(a.w, a.h);
                 ctrl.Text = txt;
                 ctrl.UseVisualStyleBackColor = true;
                 ctrl.FlatStyle = FlatStyle.Flat;
                 ctrl.FlatAppearance.BorderColor = Color.LightGray;
+                ctrl.BackColor = CalcularColor(_importes.Max(i => i.Importe), areasCtrl[a].Valor);
 
                 // Por si no se ve el text añadimos un tooltip
                 var tipCtrl = new ToolTip();
@@ -92,18 +94,30 @@ namespace FinTech.UI.WinForms
                 tipCtrl.InitialDelay = 1000;
                 tipCtrl.ReshowDelay = 500;
                 tipCtrl.ShowAlways = true;
-                tipCtrl.SetToolTip(ctrl, string.Format("#{0}\n{1}\n{2:0.#%}", areasContenidas[area].Id, txt ,areasContenidas[area].Valor / _totalPadre));
+                tipCtrl.SetToolTip(ctrl, string.Format("#{0}\n{1}\n{2:0.#%}", areasCtrl[a].Id, txt, areasCtrl[a].Valor / _totalPadre));
 
                 // El indispensable click
                 if (_catPadre == 0)
                     ctrl.Click += new EventHandler((s, e) =>
                     {
-                        EstablecerCategoria(areasContenidas[area].Id);
+                        EstablecerCategoria(areasCtrl[a].Id);
                         CrearControles();
                     });
 
 
                 pnlControles.Controls.Add(ctrl);
+            }
+
+            Color CalcularColor(Decimal max, Decimal val)
+            {
+                var top = 100;
+
+                int blue = 255 - Decimal.ToInt32(top * val / max);
+                return Color.FromArgb(
+                    blue * 1 / 5,
+                    blue * 3 / 5,
+                    255
+                    );
             }
         }
 
@@ -112,7 +126,6 @@ namespace FinTech.UI.WinForms
             EstablecerCategoria(0);
             CrearControles();
         }
-
 
     }
 }

@@ -3,13 +3,7 @@ using System.Globalization;
 
 namespace FinTech.Models
 {
-    public abstract class Superficiable
-    {
-        public  int Id { get; init; }
-        public  string Nombre { get; set; }
-        public  decimal Valor { get; set; }
-    }
-    public class GastoPorCategoria : Superficiable
+    public class GastoPorCategoria : FinTech.Tools.Superficiable
     {
         public int CategoriaId { get => base.Id; init => base.Id=value; }
         public string Categoria { get => base.Nombre; init => base.Nombre = value; }

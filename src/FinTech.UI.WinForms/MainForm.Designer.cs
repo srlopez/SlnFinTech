@@ -35,6 +35,7 @@
             this.pnlApuntes = new System.Windows.Forms.Panel();
             this.pnlCategorias = new System.Windows.Forms.Panel();
             this.pnlImportes = new System.Windows.Forms.Panel();
+            this.lblTODO = new System.Windows.Forms.Label();
             this.pnlControles = new System.Windows.Forms.Panel();
             this.btnBack = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
@@ -97,6 +98,7 @@
             // pnlImportes
             // 
             this.pnlImportes.BackColor = System.Drawing.SystemColors.Window;
+            this.pnlImportes.Controls.Add(this.lblTODO);
             this.pnlImportes.Controls.Add(this.pnlControles);
             this.pnlImportes.Controls.Add(this.btnBack);
             this.pnlImportes.Controls.Add(this.lblTotal);
@@ -106,6 +108,15 @@
             this.pnlImportes.Name = "pnlImportes";
             this.pnlImportes.Size = new System.Drawing.Size(800, 426);
             this.pnlImportes.TabIndex = 3;
+            // 
+            // lblTODO
+            // 
+            this.lblTODO.AutoSize = true;
+            this.lblTODO.Location = new System.Drawing.Point(12, 47);
+            this.lblTODO.Name = "lblTODO";
+            this.lblTODO.Size = new System.Drawing.Size(190, 15);
+            this.lblTODO.TabIndex = 5;
+            this.lblTODO.Text = "TODO: Filtros por fechas y usuarios";
             // 
             // pnlControles
             // 
@@ -154,8 +165,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.pnlImportes);
-            this.Controls.Add(this.pnlCategorias);
             this.Controls.Add(this.pnlApuntes);
+            this.Controls.Add(this.pnlCategorias);
             this.Controls.Add(this.menuPrincipal);
             this.MainMenuStrip = this.menuPrincipal;
             this.Name = "MainForm";
@@ -183,5 +194,6 @@
         private Label lblTotal;
         private Label lblCategoria;
         private Panel pnlControles;
+        private Label lblTODO;
     }
 }
