@@ -38,13 +38,14 @@ namespace FinTech.UI.Consola
             _casosDeUso = new Dictionary<(string, Modo), Action>(){
                 { ("Consultar Categorias",Modo.Anonimo), qryCategorias },
                 { ("Consultar SubCategorias",Modo.Anonimo), qrySubCategorias },
+
+                { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
+                { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
                 { ("Informe Gastos por Categorías",Modo.Usuario), qryImportesXCategoriaSinFiltro },
                 { ("Informe Gastos por Usuario",Modo.Usuario),qryImportesXCategoriaFiltradoXUsuario},
                 { ("Informe Gastos entre fechas",Modo.Usuario),qryImportesXCategoriaFiltradoXFecha},
                 { ("Informe Gastos por Usuario entre fechas",Modo.Usuario),qryImportesXCategoriaFiltradoXUsuarioYFecha},
-                { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
-                { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
-                { ("Informe Importes",Modo.Usuario), qryInformesDeImportes },
+
                 { ("Mantenimiento de Categorias",Modo.Admin), crudPrincipalesCategorias },
                 { ("Mantenimiento de SubCategorias",Modo.Admin), crudSubCategorias },
                 { (_menuModo[(int)_modo],Modo.Anonimo), establecerModoInterfaz },
@@ -100,14 +101,14 @@ namespace FinTech.UI.Consola
             //string usr = _vista.TryObtenerDatoDeTipo<string>("Introduzca Usuario");
             var usr = _vista.TryObtenerElementoDeLista<string>("Usuarios", _sistema.QryUsuarios(), "Indica un Usuario");
             Func<Apunte, bool> where = (a) => a.Usuario == usr;
-            ImportesXCategoriaFiltrado($"Gastos X Usuario {usr}", where);
+            GastosXCategoriaInclude($"Gastos de {usr}", where);
         }
         private void qryImportesXCategoriaFiltradoXFecha()
         {
             var inicio = _vista.TryObtenerFecha("Desde Fecha");
             var fin = _vista.TryObtenerFecha("Hasta Fecha");
             Func<Apunte, bool> where = (a) => a.FechaApunte >= inicio && a.FechaApunte < fin;
-            ImportesXCategoriaFiltrado("Gastos Entre Fechas", where);
+            GastosXCategoriaInclude("Gastos familiares entre Fechas", where);
         }
         private void qryImportesXCategoriaFiltradoXUsuarioYFecha()
         {
@@ -115,10 +116,9 @@ namespace FinTech.UI.Consola
             var inicio = _vista.TryObtenerFecha("Desde Fecha");
             var fin = _vista.TryObtenerFecha("Hasta Fecha");
             Func<Apunte, bool> where = (a) => a.Usuario == usr && a.FechaApunte >= inicio && a.FechaApunte < fin;
-            ImportesXCategoriaFiltrado($"Gastos X Usuario {usr} Entre Fechas", where);
+            GastosXCategoriaInclude($"Gastos de {usr} entre Fechas", where);
         }
-        private void qryImportesXCategoriaSinFiltro() =>
-            ImportesXCategoriaFiltrado("Gastos Familiares");
+        private void qryImportesXCategoriaSinFiltro() => GastosXCategoriaInclude("Gastos Familiares");
         /*
         var categorias = _sistema.QryCategorias();
         _vista.MostrarListaEnumerada("Selección de Categoria principal",categorias);
@@ -127,24 +127,23 @@ namespace FinTech.UI.Consola
         _vista.MostrarListaEnumerada<GastoPorCategoria>("Gastos x SubCategoria", impList1);
         */
 
-        private void ImportesXCategoriaFiltrado(string title, Func<Apunte, bool> where = null)
+        private void GastosXCategoriaInclude(string title, Func<Apunte, bool> where = null)
         {
-            var impList0 = _sistema.QryImporteDeGastoPorCategoria(predicado: where);
-            if (impList0.Count == 0)
+            var gastoList0 = _sistema.QryImporteDeGastoPorCategoria(predicado: where);
+            if (gastoList0.Count == 0)
             {
                 _vista.Mostrar("No hay registros seleccionados");
                 return;
             }
-            var cat = _vista.TryObtenerElementoDeLista(title, impList0, "Indica una categoría");
-            var impList1 = _sistema.QryImporteDeGastoPorCategoria(id: cat.Id, predicado: where);
-            _vista.MostrarListaEnumerada<GastoPorCategoria>($"Gastos x {cat.Categoria}", impList1);
+            var cat = _vista.TryObtenerElementoDeLista(title, gastoList0, "Indica una categoría");
+            var gastoList1 = _sistema.QryImporteDeGastoPorCategoria(id: cat.Id, predicado: where);
+            _vista.MostrarListaEnumerada<GastoPorCategoria>($"Gastos en '{cat.Categoria}'", gastoList1);
         }
         private void qryApuntes()
         {
             var apList = _sistema.QryApuntes();
             _vista.MostrarListaEnumerada<Apunte>("Consulta de Apuntes", apList);
         }
-        private void qryInformesDeImportes() { }
         private void crudApuntes()
         {
             try
