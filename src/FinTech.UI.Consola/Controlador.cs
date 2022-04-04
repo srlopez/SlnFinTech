@@ -36,8 +36,7 @@ namespace FinTech.UI.Consola
             _modo = Modo.Anonimo;
             _usuario = "Anonimo";
             _casosDeUso = new Dictionary<(string, Modo), Action>(){
-                { ("Consultar Categorias",Modo.Anonimo), qryCategorias },
-                { ("Consultar SubCategorias",Modo.Anonimo), qrySubCategorias },
+                { ("Consultar Categorías",Modo.Anonimo), qryCategorias },
 
                 { ("Consultar Apuntes",Modo.Usuario), qryApuntes },
                 { ("Registrar Apuntes",Modo.Usuario), crudApuntes },
@@ -81,16 +80,17 @@ namespace FinTech.UI.Consola
         #endregion
 
         #region Casos de Uso [Metodos]
+
         private void qryCategorias()
         {
-            var catList = _sistema.QryCategorias(0);
-            _vista.MostrarListaEnumerada<Categoria>("Consulta de Categorias principales", catList);
-        }
-        private void qrySubCategorias()
-        {
-            var catParent = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
-            var lista = _sistema.QryCategorias(catParent.Id);
-            _vista.MostrarListaEnumerada<Categoria>($"SubCategoria {catParent.Descripcion}", lista);
+            try
+            {
+                var catParent = _vista.TryObtenerElementoDeLista("Selección de Categoria principal", _sistema.QryCategorias(), "Indica la categoría padre");
+                var lista = _sistema.QryCategorias(catParent.Id);
+                _vista.MostrarListaEnumerada<Categoria>($"Categoria '{catParent.Descripcion}'", lista);
+            }
+            catch { return; }
+
         }
 
         /*
@@ -98,25 +98,38 @@ namespace FinTech.UI.Consola
         */
         private void qryImportesXCategoriaFiltradoXUsuario()
         {
-            //string usr = _vista.TryObtenerDatoDeTipo<string>("Introduzca Usuario");
-            var usr = _vista.TryObtenerElementoDeLista<string>("Usuarios", _sistema.QryUsuarios(), "Indica un Usuario");
-            Func<Apunte, bool> where = (a) => a.Usuario == usr;
-            GastosXCategoriaInclude($"Gastos de {usr}", where);
+            try
+            {
+                //string usr = _vista.TryObtenerDatoDeTipo<string>("Introduzca Usuario");
+                var usr = _vista.TryObtenerElementoDeLista<string>("Usuarios", _sistema.QryUsuarios(), "Indica un Usuario");
+                Func<Apunte, bool> where = (a) => a.Usuario == usr;
+                GastosXCategoriaInclude($"Gastos de {usr}", where);
+            }
+            catch { return; }
         }
         private void qryImportesXCategoriaFiltradoXFecha()
         {
-            var inicio = _vista.TryObtenerFecha("Desde Fecha");
-            var fin = _vista.TryObtenerFecha("Hasta Fecha");
-            Func<Apunte, bool> where = (a) => a.FechaApunte >= inicio && a.FechaApunte < fin;
-            GastosXCategoriaInclude("Gastos familiares entre Fechas", where);
+            try
+            {
+                var inicio = _vista.TryObtenerFecha("Desde Fecha");
+                var fin = _vista.TryObtenerFecha("Hasta Fecha");
+                Func<Apunte, bool> where = (a) => a.FechaApunte >= inicio && a.FechaApunte < fin;
+                GastosXCategoriaInclude("Gastos familiares entre Fechas", where);
+            }
+            catch { return; }
         }
         private void qryImportesXCategoriaFiltradoXUsuarioYFecha()
         {
-            var usr = _vista.TryObtenerElementoDeLista<string>("Usuarios", _sistema.QryUsuarios(), "Indica un Usuario");
-            var inicio = _vista.TryObtenerFecha("Desde Fecha");
-            var fin = _vista.TryObtenerFecha("Hasta Fecha");
-            Func<Apunte, bool> where = (a) => a.Usuario == usr && a.FechaApunte >= inicio && a.FechaApunte < fin;
-            GastosXCategoriaInclude($"Gastos de {usr} entre Fechas", where);
+            try
+            {
+                var usr = _vista.TryObtenerElementoDeLista<string>("Usuarios", _sistema.QryUsuarios(), "Indica un Usuario");
+                var inicio = _vista.TryObtenerFecha("Desde Fecha");
+                var fin = _vista.TryObtenerFecha("Hasta Fecha");
+                Func<Apunte, bool> where = (a) => a.Usuario == usr && a.FechaApunte >= inicio && a.FechaApunte < fin;
+                GastosXCategoriaInclude($"Gastos de {usr} entre Fechas", where);
+            }
+            catch { return; }
+
         }
         private void qryImportesXCategoriaSinFiltro() => GastosXCategoriaInclude("Gastos Familiares");
         /*
@@ -129,15 +142,19 @@ namespace FinTech.UI.Consola
 
         private void GastosXCategoriaInclude(string title, Func<Apunte, bool> where = null)
         {
-            var gastoList0 = _sistema.QryImporteDeGastoPorCategoria(predicado: where);
-            if (gastoList0.Count == 0)
+            try
             {
-                _vista.Mostrar("No hay registros seleccionados");
-                return;
+                var gastoList0 = _sistema.QryImporteDeGastoPorCategoria(predicado: where);
+                if (gastoList0.Count == 0)
+                {
+                    _vista.Mostrar("No hay registros seleccionados");
+                    return;
+                }
+                var cat = _vista.TryObtenerElementoDeLista(title, gastoList0, "Indica una categoría");
+                var gastoList1 = _sistema.QryImporteDeGastoPorCategoria(id: cat.Id, predicado: where);
+                _vista.MostrarListaEnumerada<GastoPorCategoria>($"Gastos en '{cat.Categoria}'", gastoList1);
             }
-            var cat = _vista.TryObtenerElementoDeLista(title, gastoList0, "Indica una categoría");
-            var gastoList1 = _sistema.QryImporteDeGastoPorCategoria(id: cat.Id, predicado: where);
-            _vista.MostrarListaEnumerada<GastoPorCategoria>($"Gastos en '{cat.Categoria}'", gastoList1);
+            catch { return; }
         }
         private void qryApuntes()
         {
@@ -267,7 +284,7 @@ namespace FinTech.UI.Consola
             {
                 _usuario = username.ToLower().Trim();
                 _modo = Modo.Usuario;
-                establecerOpcionDeMenu($"Logout {username}");
+                establecerOpcionDeMenu($"Logout <{username}>");
             };
             void establecerAdmin(string username)
             {
