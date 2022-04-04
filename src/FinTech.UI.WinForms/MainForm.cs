@@ -8,12 +8,9 @@ namespace FinTech.UI.WinForms
         private Sistema _sistema;
         private List<Categoria> _categorias;
 
-
         private int _catPadre;
         private decimal _totalPadre;
         private List<GastoPorCategoria> _importes;
-
-
 
         public MainForm(Sistema sistema)
         {
@@ -26,8 +23,7 @@ namespace FinTech.UI.WinForms
         private void MainForm_Load(object sender, EventArgs e)
         {
             importesToolStripMenuItem_Click(sender, e);
-            EstablecerCategoria(0);
-            CrearControles();
+            btnBack_Click(sender, e);
         }
 
         // MENU
@@ -52,14 +48,22 @@ namespace FinTech.UI.WinForms
             pnlImportes.Visible = true;
         }
 
-        // RESIZE
+        // RESIZE DE LA PANTALLA
         private void pnlControles_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (pnlImportes.Visible == true)
-                CrearControles();
+            if (pnlImportes.Visible == true) CrearControles();
         }
 
-        // PINTAMOS
+        // RESET GENERAL
+        private void btnBack_Click(object sender, EventArgs e) => EstablecerCategoriaClick(0);
+
+        // EVENTO DE REPINTAR CATEGORIA
+        private void EstablecerCategoriaClick(int catId)
+        {
+            // Inicializamos la pantalla
+            EstablecerCategoria(catId);
+            CrearControles();
+        }
         private void EstablecerCategoria(int catId)
         {
             _catPadre = catId;
@@ -98,34 +102,25 @@ namespace FinTech.UI.WinForms
 
                 // El indispensable click
                 if (_catPadre == 0)
-                    ctrl.Click += new EventHandler((s, e) =>
-                    {
-                        EstablecerCategoria(areasCtrl[a].Id);
-                        CrearControles();
-                    });
-
+                    ctrl.Click += new EventHandler((s, e) => EstablecerCategoriaClick(areasCtrl[a].Id));
 
                 pnlControles.Controls.Add(ctrl);
             }
 
             Color CalcularColor(Decimal max, Decimal val)
             {
-                var top = 100;
+                var claridad = 80;// -= mas claro += mas oscuro //255
 
-                int blue = 255 - Decimal.ToInt32(top * val / max);
+                int noblue = 255 - Decimal.ToInt32(claridad * val / max);
                 return Color.FromArgb(
-                    blue * 1 / 5,
-                    blue * 3 / 5,
+                    noblue * 1 / 5,
+                    noblue * 3 / 5,
                     255
                     );
             }
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
-        {
-            EstablecerCategoria(0);
-            CrearControles();
-        }
+
 
     }
 }
