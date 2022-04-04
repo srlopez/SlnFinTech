@@ -63,7 +63,7 @@ namespace FinTech.UI.WinForms
         private void EstablecerCategoria(int catId)
         {
             _catPadre = catId;
-            _importes = _sistema.QryImporteApuntes(catId);
+            _importes = _sistema.QryImporteDeGastoPorCategoria(id: catId);
             _totalPadre = _importes.Sum(imp => imp.Importe);
 
             lblCategoria.Text = catId == 0 ? "Gasto total" : _categorias.FirstOrDefault(cat => cat.Id == catId).Descripcion;

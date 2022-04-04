@@ -13,7 +13,7 @@ namespace FinTech.UI.WinForms
         {
 
             // Servicios
-            AppServicios.Register<ILog, ConsoleLog>();
+            AppServicios.Register<ILog, AppLog>();
             AppServicios.Register<AppConfig>();
             AppServicios.Register<IRepoApuntes, RepoApuntesCSV>();
             AppServicios.Register<IRepoCategoria, RepoCategoriaCSV>();

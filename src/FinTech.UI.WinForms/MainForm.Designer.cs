@@ -33,7 +33,9 @@
             this.categoriasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlApuntes = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.pnlCategorias = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.pnlImportes = new System.Windows.Forms.Panel();
             this.lblTODO = new System.Windows.Forms.Label();
             this.pnlControles = new System.Windows.Forms.Panel();
@@ -41,6 +43,8 @@
             this.lblTotal = new System.Windows.Forms.Label();
             this.lblCategoria = new System.Windows.Forms.Label();
             this.menuPrincipal.SuspendLayout();
+            this.pnlApuntes.SuspendLayout();
+            this.pnlCategorias.SuspendLayout();
             this.pnlImportes.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,20 +84,42 @@
             // pnlApuntes
             // 
             this.pnlApuntes.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.pnlApuntes.Controls.Add(this.label1);
             this.pnlApuntes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlApuntes.Location = new System.Drawing.Point(0, 24);
             this.pnlApuntes.Name = "pnlApuntes";
             this.pnlApuntes.Size = new System.Drawing.Size(800, 426);
             this.pnlApuntes.TabIndex = 1;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.IndianRed;
+            this.label1.Location = new System.Drawing.Point(23, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(122, 15);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "TODO: CRUD Apuntes";
+            // 
             // pnlCategorias
             // 
             this.pnlCategorias.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.pnlCategorias.Controls.Add(this.label2);
             this.pnlCategorias.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlCategorias.Location = new System.Drawing.Point(0, 24);
             this.pnlCategorias.Name = "pnlCategorias";
             this.pnlCategorias.Size = new System.Drawing.Size(800, 426);
             this.pnlCategorias.TabIndex = 2;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.IndianRed;
+            this.label2.Location = new System.Drawing.Point(23, 23);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(134, 15);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "TODO: CRUD Categorias";
             // 
             // pnlImportes
             // 
@@ -112,7 +138,8 @@
             // lblTODO
             // 
             this.lblTODO.AutoSize = true;
-            this.lblTODO.Location = new System.Drawing.Point(12, 47);
+            this.lblTODO.ForeColor = System.Drawing.Color.IndianRed;
+            this.lblTODO.Location = new System.Drawing.Point(14, 5);
             this.lblTODO.Name = "lblTODO";
             this.lblTODO.Size = new System.Drawing.Size(190, 15);
             this.lblTODO.TabIndex = 5;
@@ -133,7 +160,7 @@
             // btnBack
             // 
             this.btnBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBack.Location = new System.Drawing.Point(711, 12);
+            this.btnBack.Location = new System.Drawing.Point(711, 41);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(75, 23);
             this.btnBack.TabIndex = 0;
@@ -145,19 +172,21 @@
             // 
             this.lblTotal.AutoSize = true;
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblTotal.Location = new System.Drawing.Point(218, 21);
+            this.lblTotal.Location = new System.Drawing.Point(218, 41);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(0, 21);
+            this.lblTotal.Size = new System.Drawing.Size(17, 21);
             this.lblTotal.TabIndex = 2;
+            this.lblTotal.Text = "_";
             // 
             // lblCategoria
             // 
             this.lblCategoria.AutoSize = true;
             this.lblCategoria.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblCategoria.Location = new System.Drawing.Point(17, 21);
+            this.lblCategoria.Location = new System.Drawing.Point(17, 41);
             this.lblCategoria.Name = "lblCategoria";
-            this.lblCategoria.Size = new System.Drawing.Size(0, 21);
+            this.lblCategoria.Size = new System.Drawing.Size(17, 21);
             this.lblCategoria.TabIndex = 1;
+            this.lblCategoria.Text = "_";
             // 
             // MainForm
             // 
@@ -174,6 +203,10 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuPrincipal.ResumeLayout(false);
             this.menuPrincipal.PerformLayout();
+            this.pnlApuntes.ResumeLayout(false);
+            this.pnlApuntes.PerformLayout();
+            this.pnlCategorias.ResumeLayout(false);
+            this.pnlCategorias.PerformLayout();
             this.pnlImportes.ResumeLayout(false);
             this.pnlImportes.PerformLayout();
             this.ResumeLayout(false);
@@ -195,5 +228,7 @@
         private Label lblCategoria;
         private Panel pnlControles;
         private Label lblTODO;
+        private Label label1;
+        private Label label2;
     }
 }
